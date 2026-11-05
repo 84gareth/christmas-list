@@ -1,0 +1,1199 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1e3f">
+<title>The Family Christmas List</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@700&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#0b1e3f;--night2:#183a6b;--red:#d62839;--red-d:#a51c2b;--green:#1f7a4d;--green-d:#145a37;
+  --gold:#f2c14e;--gold-d:#c99a2e;--snow:#f8fbff;--paper:#fffaf0;--paper2:#f6ecd9;--ink:#3a2a1a;--muted:#7a6a5a;
+  --radius:18px;--shadow:0 6px 0 rgba(0,0,0,.18),0 12px 28px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{min-height:100vh;color:var(--snow);font-family:Nunito,system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.4;
+  background:radial-gradient(ellipse at 50% -10%,#2b5aa0 0%,#14305d 38%,#0b1e3f 70%,#06122a 100%) fixed;overflow-x:hidden}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+a{color:inherit}
+h1,h2,.festive{font-family:"Mountains of Christmas",Georgia,serif;font-weight:700;letter-spacing:.5px}
+
+/* sky */
+#snow,#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+#snow{z-index:1}
+#fx{z-index:60}
+#sky{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.moon{position:absolute;top:180px;right:-26px;width:84px;height:84px;border-radius:50%;
+  background:radial-gradient(circle at 38% 38%,#fffbe8 0%,#f7e9b5 55%,#e8d38c 100%);box-shadow:0 0 40px 10px rgba(255,240,190,.35)}
+.moon::after{content:"";position:absolute;width:14px;height:14px;border-radius:50%;background:rgba(200,180,110,.35);top:22px;left:40px;box-shadow:-18px 20px 0 -3px rgba(200,180,110,.3),8px 30px 0 -5px rgba(200,180,110,.3)}
+.star{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;animation:twinkle 3s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.25}50%{opacity:1}}
+.sleigh{position:absolute;top:120px;left:0;width:190px;opacity:.92;animation:fly 38s linear infinite;animation-delay:4s;transform:translateX(-260px)}
+@keyframes fly{0%{transform:translate(-260px,30px) rotate(-4deg)}50%{transform:translate(50vw,-10px) rotate(-2deg)}62%,100%{transform:translate(110vw,-60px) rotate(-6deg)}}
+#ground{position:fixed;left:0;right:0;bottom:0;height:120px;z-index:2;pointer-events:none}
+#ground svg{width:100%;height:100%;display:block}
+
+/* layout */
+#app{position:relative;z-index:3;max-width:640px;margin:0 auto;padding:0 16px calc(150px + env(safe-area-inset-bottom))}
+.lights{display:block;width:calc(100% + 32px);margin:0 -16px;height:38px}
+.bulb{animation:glow 1.6s ease-in-out infinite}
+.bulb:nth-child(3n){animation-delay:.5s}.bulb:nth-child(3n+1){animation-delay:1s}
+@keyframes glow{0%,100%{opacity:1;filter:drop-shadow(0 0 4px currentColor)}50%{opacity:.45;filter:none}}
+
+.title{font-size:clamp(44px,12vw,64px);line-height:1;margin:10px 0 6px;text-align:center;color:#fff;
+  text-shadow:0 3px 0 var(--red-d),0 6px 18px rgba(0,0,0,.4)}
+.countdown{text-align:center;margin:0 0 6px;font-weight:800;color:var(--gold);font-size:18px}
+.countdown .num{display:inline-block;background:var(--red);color:#fff;border-radius:12px;padding:2px 10px;margin-right:6px;font-size:22px;box-shadow:0 3px 0 var(--red-d)}
+.sub{font-size:28px;margin:26px 0 12px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.35)}
+.sub.center{text-align:center}
+.hint{color:#cfe0ff;text-align:center;margin:4px 0 0;font-size:14px}
+
+/* people */
+.bauble-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 0}
+.bauble-grid .person{width:25%}
+@media (max-width:380px){.bauble-grid .person{width:33.33%}}
+.person{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;border-radius:16px;transition:transform .15s}
+.person span{font-weight:800;font-size:15px}
+.person:hover svg,.person:focus-visible svg{animation:swing .7s ease-in-out}
+.person:active{transform:scale(.94)}
+@keyframes swing{0%,100%{transform:rotate(0)}25%{transform:rotate(9deg)}75%{transform:rotate(-9deg)}}
+.bauble{transform-origin:50% 0;overflow:visible;display:block}
+
+/* top bar */
+.topbar{position:relative}
+.topbar .row{display:flex;align-items:center;gap:10px;margin-top:4px}
+.topbar .who{flex:1;min-width:0}
+.topbar .hello{font-family:"Mountains of Christmas",Georgia,serif;font-size:clamp(20px,6vw,30px);line-height:1.05;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar .cd{color:var(--gold);font-weight:800;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar .iconbtn{width:40px;height:40px}
+.topbar .row{gap:7px}
+.iconbtn{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.18)}
+.iconbtn:active{transform:scale(.92)}
+.iconbtn svg{width:22px;height:22px}
+.tabs{display:flex;gap:8px;margin:14px 0 4px;background:rgba(0,0,0,.22);padding:5px;border-radius:999px}
+.tab{flex:1;padding:9px 6px;border-radius:999px;font-weight:800;font-size:15px;color:#cfe0ff;display:flex;align-items:center;justify-content:center;gap:6px}
+.tab svg{width:18px;height:18px}
+.tab.on{background:var(--red);color:#fff;box-shadow:0 3px 0 var(--red-d)}
+
+/* cards */
+.card{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--paper);color:var(--ink);
+  border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);position:relative;transition:transform .15s}
+.card:active{transform:translateY(2px) scale(.99)}
+.card .ct{flex:1;min-width:0}
+.card .ct b{display:block;font-size:20px;font-weight:900;line-height:1.15}
+.card .ct small{color:var(--muted);font-weight:700;font-size:14px}
+.card .chev{width:22px;height:22px;color:var(--muted);flex:none}
+.card.mine{margin-top:16px;background:linear-gradient(135deg,#fffaf0 0%,#fff3d6 100%);border:3px dashed var(--gold-d)}
+.card.mine .ct b{font-family:"Mountains of Christmas",Georgia,serif;font-size:30px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid .card{flex-direction:column;text-align:center;padding:14px 8px 12px;gap:4px}
+.grid .card .ct b{font-size:18px}
+.pill{display:inline-block;margin-top:4px;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:800;background:var(--paper2);color:var(--muted)}
+.pill.ok{background:#dff3e6;color:var(--green-d)}
+
+/* notices */
+.notice{display:flex;gap:10px;align-items:flex-start;background:#fff3d6;color:var(--ink);border-radius:14px;padding:12px;margin-top:14px;border-left:6px solid var(--gold-d);box-shadow:var(--shadow)}
+.notice svg{width:22px;height:22px;flex:none;color:var(--red)}
+.notice div{flex:1}
+.banner{background:var(--red);color:#fff;border-radius:14px;padding:10px 14px;margin-top:12px;font-weight:700;font-size:14px}
+
+/* list view */
+.listhead{display:flex;align-items:center;gap:12px;margin:14px 0 4px}
+.listhead h1{font-size:clamp(32px,9vw,44px);margin:0;line-height:1;color:#fff;text-shadow:0 3px 0 rgba(0,0,0,.35)}
+.shh{display:flex;gap:10px;align-items:center;background:rgba(0,0,0,.25);border-radius:14px;padding:10px 12px;margin:12px 0 0;font-size:14px;color:#e6eeff}
+.shh svg{width:26px;height:26px;flex:none;color:var(--gold)}
+.items{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column;gap:14px}
+.item{position:relative;display:flex;gap:10px;background:var(--paper);color:var(--ink);border-radius:var(--radius);padding:14px 14px 12px 10px;box-shadow:var(--shadow);border-left:8px solid var(--green);overflow:hidden;touch-action:pan-y}
+.item.tag-must{border-left-color:var(--red)}
+.item.tag-surprise{border-left-color:var(--gold-d)}
+.item.dragging{z-index:20;box-shadow:0 18px 40px rgba(0,0,0,.45);transition:none;scale:1.03}
+.item.shift{transition:transform .18s ease}
+.item.is-bought .ib{opacity:.55}
+.rank{flex:none;width:34px;height:34px;border-radius:50%;background:var(--red);color:#fff;font-weight:900;display:grid;place-items:center;box-shadow:0 3px 0 var(--red-d);margin-top:2px}
+.handle{flex:none;width:34px;align-self:stretch;display:grid;place-items:center;color:#b9a88f;touch-action:none;cursor:grab;border-radius:10px;margin:-6px 0 -6px -4px}
+.handle:active{cursor:grabbing;background:var(--paper2)}
+.handle svg{width:22px;height:22px}
+.ib{flex:1;min-width:0}
+.ititle{font-weight:900;font-size:18px;line-height:1.2;word-wrap:break-word}
+.imeta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px}
+.chip{font-size:12px;font-weight:900;padding:3px 9px;border-radius:999px;color:#fff;background:var(--green)}
+.chip.must{background:var(--red)}.chip.surprise{background:var(--gold-d)}
+.price{font-weight:900;color:var(--green-d)}
+.notes{margin-top:6px;color:var(--muted);font-size:14px;word-wrap:break-word}
+.iactions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
+.stamp{position:absolute;top:10px;right:-38px;transform:rotate(30deg);background:var(--red);color:#fff;font-weight:900;font-size:12px;padding:4px 44px;box-shadow:0 2px 6px rgba(0,0,0,.25);text-transform:uppercase;letter-spacing:.5px}
+.boughtby{display:flex;align-items:center;gap:6px;font-weight:900;color:var(--red-d);font-size:14px;margin-top:8px}
+.boughtby svg{width:18px;height:18px}
+.empty{text-align:center;padding:30px 10px 10px;color:#dfe9ff}
+.empty svg{width:120px;height:120px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 22px;border-radius:999px;font-weight:900;font-size:17px;
+  background:var(--red);color:#fff;box-shadow:0 4px 0 var(--red-d),0 8px 18px rgba(0,0,0,.25);text-decoration:none;transition:transform .1s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--red-d)}
+.btn svg{width:20px;height:20px}
+.btn.green{background:var(--green);box-shadow:0 4px 0 var(--green-d),0 8px 18px rgba(0,0,0,.25)}
+.btn.gold{background:var(--gold);color:var(--ink);box-shadow:0 4px 0 var(--gold-d),0 8px 18px rgba(0,0,0,.25)}
+.btn.ghost{background:var(--paper2);color:var(--ink);box-shadow:0 3px 0 #dccbaa}
+.btn.small{padding:8px 14px;font-size:14px}
+.btn.small svg{width:16px;height:16px}
+.btn.block{width:100%;margin-top:18px}
+.btn[disabled]{opacity:.5;pointer-events:none}
+.mini{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--paper2);color:var(--ink)}
+.mini svg{width:18px;height:18px}
+.mini.danger{color:var(--red)}
+.spacer{flex:1}
+
+/* pin */
+.pinwrap{text-align:center;padding-top:6px}
+.pinwrap h1{font-size:clamp(34px,10vw,46px);margin:10px 0 4px;color:#fff;text-shadow:0 3px 0 rgba(0,0,0,.35)}
+.dots{display:flex;justify-content:center;gap:16px;margin:22px 0}
+.dot{width:22px;height:22px;border-radius:50%;border:3px solid #fff;transition:background .15s,transform .15s}
+.dot.on{background:var(--gold);border-color:var(--gold);transform:scale(1.15)}
+.dots.shake{animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}
+.pad{display:grid;grid-template-columns:repeat(3,76px);gap:14px;justify-content:center}
+.key{width:76px;height:76px;border-radius:50%;font-size:30px;font-weight:900;color:#fff;
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.5),transparent 40%),var(--red);box-shadow:0 5px 0 var(--red-d)}
+.key:nth-child(even){background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.5),transparent 40%),var(--green);box-shadow:0 5px 0 var(--green-d)}
+.key:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.3)}
+.key.plain{background:rgba(255,255,255,.12);box-shadow:none;font-size:16px}
+.key svg{width:28px;height:28px}
+.pinerr{min-height:24px;color:#ffd1d1;font-weight:800;margin:0}
+.back{display:inline-flex;align-items:center;gap:6px;font-weight:800;color:#cfe0ff;padding:8px 0}
+.back svg{width:20px;height:20px}
+
+/* modal */
+#modal{position:fixed;inset:0;z-index:50;display:none;align-items:flex-end;justify-content:center;background:rgba(4,10,25,.6);padding:12px}
+#modal.open{display:flex;animation:fade .2s}
+@media (min-width:600px){#modal{align-items:center}}
+@keyframes fade{from{opacity:0}}
+.sheet{width:100%;max-width:520px;max-height:calc(100vh - 24px);overflow:auto;background:var(--paper);color:var(--ink);border-radius:24px;padding:20px 18px 18px;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:pop .25s cubic-bezier(.2,1.4,.5,1)}
+@keyframes pop{from{transform:translateY(40px) scale(.96);opacity:0}}
+.sheet h2{font-size:32px;margin:0 0 10px;color:var(--red)}
+.sheet p{margin:6px 0}
+.field{display:block;margin-top:12px}
+.field span{display:block;font-weight:900;font-size:14px;margin-bottom:4px}
+.field span em{font-weight:700;color:var(--muted);font-style:normal}
+.field input,.field textarea{width:100%;font:inherit;font-size:16px;padding:12px;border-radius:12px;border:2px solid #e2d3b6;background:#fff;color:var(--ink)}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--green)}
+.field textarea{resize:vertical;min-height:64px}
+.tagpick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tagpick label{position:relative}
+.tagpick input{position:absolute;opacity:0}
+.tagpick div{text-align:center;padding:10px 4px;border-radius:12px;font-weight:900;font-size:14px;border:3px solid transparent;background:var(--paper2)}
+.tagpick input:checked+div{color:#fff}
+.tagpick .t-must input:checked+div{background:var(--red);border-color:var(--red-d)}
+.tagpick .t-like input:checked+div{background:var(--green);border-color:var(--green-d)}
+.tagpick .t-surprise input:checked+div{background:var(--gold-d);border-color:#9c7720}
+.tagpick input:focus-visible+div{outline:3px solid var(--night2)}
+.ferr{color:var(--red);font-weight:800;min-height:20px;margin-top:8px;font-size:14px}
+.sheet .row{display:flex;gap:10px;margin-top:16px}
+.sheet .row .btn{flex:1}
+.toggle{display:flex;align-items:center;gap:12px;margin-top:14px;padding:12px;border-radius:14px;background:var(--paper2);font-weight:800;cursor:pointer}
+.toggle input{width:24px;height:24px;accent-color:var(--green)}
+.big-item{background:#fff;border-radius:14px;padding:12px;margin-top:8px;font-weight:900;font-size:18px;border-left:6px solid var(--green)}
+
+/* alarm */
+#alarm{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;gap:3vw;padding:16px;cursor:pointer;animation:flash .5s steps(1) infinite}
+#alarm.on{display:flex}
+@keyframes flash{0%{background:rgba(214,30,45,.94)}50%{background:rgba(25,70,215,.94)}}
+.alarm-text{font-weight:900;font-size:clamp(34px,11vw,96px);line-height:.95;text-align:center;color:#fff;letter-spacing:2px;text-shadow:0 5px 0 #000,0 0 30px rgba(255,255,255,.6);animation:shake .3s infinite}
+.siren{width:clamp(54px,15vw,130px);flex:none;overflow:visible}
+.siren .beam{transform-origin:32px 32px;animation:spin .7s linear infinite}
+.corner{display:flex;justify-content:flex-end;gap:8px;margin:-4px 0 -6px}
+/* toast */
+#toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top));z-index:70;transform:translate(-50%,-180%);background:var(--green);color:#fff;font-weight:900;padding:12px 20px;border-radius:999px;box-shadow:0 8px 24px rgba(0,0,0,.35);transition:transform .3s cubic-bezier(.2,1.4,.5,1);max-width:calc(100% - 32px);text-align:center}
+#toast.show{transform:translate(-50%,0)}
+#toast.bad{background:var(--red)}
+
+/* shopping + admin */
+.group{margin-top:14px;background:var(--paper);color:var(--ink);border-radius:var(--radius);padding:12px 14px;box-shadow:var(--shadow)}
+.group h3{display:flex;align-items:center;gap:10px;margin:0 0 6px;font-size:20px}
+.srow{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px dashed #e2d3b6}
+.srow:first-of-type{border-top:0}
+.srow .ib b{display:block}
+.srow .ib small{color:var(--muted);font-weight:700}
+.arow{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px dashed #e2d3b6}
+.arow:first-child{border-top:0}
+.arow b{flex:1}
+.loading{text-align:center;padding-top:30vh}
+.loading .festive{font-size:34px}
+.spin{width:70px;height:70px;margin:0 auto 10px;animation:spin 1.6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.foot{text-align:center;color:#9fb6dd;font-size:12px;margin-top:36px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="sky"><div class="moon"></div></div>
+<canvas id="snow"></canvas>
+<div id="ground"></div>
+<main id="app"></main>
+<div id="modal" role="dialog" aria-modal="true"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<canvas id="fx"></canvas>
+<div id="alarm" role="alert"></div>
+
+<script type="module">
+/* ============================================================
+   The Family Christmas List
+   ============================================================ */
+const VERSION = '1.2.3';
+
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBRPZgESoFpIrDzE50Jiav6hdtLWFOoWWM",
+  authDomain: "project-sam-ae8b8.firebaseapp.com",
+  databaseURL: "https://project-sam-ae8b8-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "project-sam-ae8b8",
+  storageBucket: "project-sam-ae8b8.firebasestorage.app",
+  messagingSenderId: "314156956561",
+  appId: "1:314156956561:web:be0328726855484be0b830"
+};
+const FIREBASE_VERSION = '10.12.2';
+
+const ADMIN = 'Gareth';
+const PEOPLE = [
+  { name: 'Gareth',    adult: true,  partner: 'Amy',       colour: '#d62839' },
+  { name: 'Amy',       adult: true,  partner: 'Gareth',    colour: '#e0559a' },
+  { name: 'Robert',    adult: true,  partner: 'Katie',     colour: '#e67e22' },
+  { name: 'Katie',     adult: true,  partner: 'Robert',    colour: '#d4a017' },
+  { name: 'Trevor',    adult: true,  partner: 'Christine', colour: '#1f7a4d' },
+  { name: 'Christine', adult: true,  partner: 'Trevor',    colour: '#13a089' },
+  { name: 'Claire',    adult: true,                        colour: '#8e44ad' },
+  { name: 'Joe',       adult: true,                        colour: '#2e6fd6' },
+  { name: 'Sam',       adult: false, managedBy: ['Gareth', 'Amy'], colour: '#00a3c4' },
+  { name: 'Charlie',   adult: false, managedBy: ['Gareth', 'Amy'], colour: '#ff6f61' },
+  { name: 'Lily',      adult: false,                       colour: '#b15ce6' },
+  { name: 'Freddy',    adult: false,                       colour: '#3fae49' },
+];
+const TAGS = { must: 'Must have', like: 'Would like', surprise: 'Nice to have' };
+
+const DEMO = new URLSearchParams(location.search).has('demo');
+const SESSION_KEY = 'xmasListMe';
+const SOUND_KEY = 'xmasListSound';
+const MUSIC_KEY = 'xmasListMusic';
+
+/* ---------- helpers ---------- */
+const $ = (s) => document.querySelector(s);
+const byName = (n) => PEOPLE.find((p) => p.name === n);
+const isKid = (n) => !byName(n)?.adult;
+const partnerOf = (n) => byName(n)?.partner || null;
+const isManaged = (n) => !!byName(n)?.managedBy;
+const NO_PIN = 'no-pin';
+const canEdit = (viewer, owner) => (viewer === owner && !isManaged(owner)) || !!byName(owner)?.managedBy?.includes(viewer);
+const canSeeBought = (viewer, owner) => viewer !== owner && !isKid(viewer);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+const isMyPurchase = (i, me) => !!i.boughtBy && i.owner !== me && (i.boughtBy === me || (i.joint && partnerOf(i.boughtBy) === me));
+const buyerLabel = (i) => (i.joint && partnerOf(i.boughtBy) ? `${i.boughtBy} & ${partnerOf(i.boughtBy)}` : i.boughtBy);
+
+function normaliseLink(raw) {
+  let s = (raw || '').trim();
+  if (!s) return { ok: true, url: '' };
+  if (!/^https?:\/\//i.test(s)) s = 'https://' + s;
+  try {
+    const u = new URL(s);
+    if (!/^https?:$/.test(u.protocol) || !u.hostname.includes('.')) throw 0;
+    return { ok: true, url: u.href };
+  } catch { return { ok: false }; }
+}
+function safeHref(url) {
+  try { const u = new URL(url); return /^https?:$/.test(u.protocol) ? u.href : null; } catch { return null; }
+}
+function domainOf(url) {
+  try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return 'Link'; }
+}
+
+/* Pure-JS SHA-256 so PIN hashes match on every device and browser */
+const sha256 = (() => {
+  const K = [], H0 = [];
+  const primes = []; for (let n = 2; primes.length < 64; n++) { if (primes.every((p) => n % p)) primes.push(n); }
+  const frac = (x) => ((x - Math.floor(x)) * 4294967296) >>> 0;
+  primes.forEach((p, i) => { K[i] = frac(Math.cbrt(p)); if (i < 8) H0[i] = frac(Math.sqrt(p)); });
+  const rotr = (x, n) => (x >>> n) | (x << (32 - n));
+  return (str) => {
+    const bytes = new TextEncoder().encode(str);
+    const len = bytes.length, total = ((len + 9 + 63) >> 6) << 6;
+    const m = new Uint8Array(total); m.set(bytes); m[len] = 0x80;
+    const dv = new DataView(m.buffer);
+    dv.setUint32(total - 4, (len * 8) >>> 0); dv.setUint32(total - 8, Math.floor(len / 536870912));
+    const H = H0.slice(), w = new Uint32Array(64);
+    for (let i = 0; i < total; i += 64) {
+      for (let t = 0; t < 16; t++) w[t] = dv.getUint32(i + t * 4);
+      for (let t = 16; t < 64; t++) {
+        const s0 = rotr(w[t - 15], 7) ^ rotr(w[t - 15], 18) ^ (w[t - 15] >>> 3);
+        const s1 = rotr(w[t - 2], 17) ^ rotr(w[t - 2], 19) ^ (w[t - 2] >>> 10);
+        w[t] = (w[t - 16] + s0 + w[t - 7] + s1) >>> 0;
+      }
+      let [a, b, c, d, e, f, g, h] = H;
+      for (let t = 0; t < 64; t++) {
+        const S1 = rotr(e, 6) ^ rotr(e, 11) ^ rotr(e, 25), ch = (e & f) ^ (~e & g);
+        const t1 = (h + S1 + ch + K[t] + w[t]) >>> 0;
+        const S0 = rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22), maj = (a & b) ^ (a & c) ^ (b & c);
+        const t2 = (S0 + maj) >>> 0;
+        h = g; g = f; f = e; e = (d + t1) >>> 0; d = c; c = b; b = a; a = (t1 + t2) >>> 0;
+      }
+      [a, b, c, d, e, f, g, h].forEach((v, k) => { H[k] = (H[k] + v) >>> 0; });
+    }
+    return H.map((v) => v.toString(16).padStart(8, '0')).join('');
+  };
+})();
+const pinHash = (name, pin) => sha256(`family-xmas-list:${name}:${pin}`);
+window.__sha256 = sha256;
+
+function sleeps() {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  let x = new Date(now.getFullYear(), 11, 25);
+  if (today > x) x = new Date(now.getFullYear() + 1, 11, 25);
+  return Math.round((x - today) / 864e5);
+}
+function countdownHTML() {
+  const n = sleeps();
+  if (n === 0) return `It's Christmas Day!`;
+  return `<span class="num">${n}</span>${n === 1 ? 'sleep' : 'sleeps'} until Christmas`;
+}
+function countdownText() {
+  const n = sleeps();
+  return n === 0 ? `It's Christmas Day!` : `${plural(n, 'sleep', 'sleeps')} until Christmas`;
+}
+
+/* ---------- icons ---------- */
+const I = {
+  soundOn: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>',
+  music: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3" fill="currentColor"/><circle cx="17" cy="16" r="3" fill="currentColor"/></svg>',
+  musicOff: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3" fill="currentColor"/><circle cx="17" cy="16" r="3" fill="currentColor"/><path d="M2 2l20 20" stroke-width="2.6"/></svg>',
+  soundOff: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z" fill="currentColor"/><path d="m16 9 6 6M22 9l-6 6"/></svg>',
+  door: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h8"/><path d="M10 12h11M18 8l3 4-3 4"/></svg>',
+  back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
+  chev: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>',
+  grip: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="9" cy="6" r="1.8"/><circle cx="15" cy="6" r="1.8"/><circle cx="9" cy="12" r="1.8"/><circle cx="15" cy="12" r="1.8"/><circle cx="9" cy="18" r="1.8"/><circle cx="15" cy="18" r="1.8"/></svg>',
+  edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg>',
+  bin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg>',
+  link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 6 0l3-3a4 4 0 0 0-6-6l-1 1"/><path d="M14 10a4 4 0 0 0-6 0l-3 3a4 4 0 0 0 6 6l1-1"/></svg>',
+  gift: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="5" rx="1"/><path d="M5 13v8h14v-8M12 8v13"/><path d="M12 8C10 4 6 4 7 7c.5 1 3 1 5 1zM12 8c2-4 6-4 5-1-.5 1-3 1-5 1z"/></svg>',
+  plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  bell: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a1.5 1.5 0 0 1 1.5 1.5v.6A6.5 6.5 0 0 1 18.5 10.5v4l2 3H3.5l2-3v-4A6.5 6.5 0 0 1 10.5 4.1v-.6A1.5 1.5 0 0 1 12 2z"/><circle cx="12" cy="20" r="2"/></svg>',
+  list: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2" fill="currentColor"/><circle cx="4.5" cy="12" r="1.2" fill="currentColor"/><circle cx="4.5" cy="18" r="1.2" fill="currentColor"/></svg>',
+  bag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 12H6z"/><path d="M9 10V6a3 3 0 0 1 6 0v4"/></svg>',
+  star: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 16.9 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg>',
+  key: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 5 21 3M14 10l4-4 2 2"/><circle cx="8" cy="16" r="5"/></svg>',
+  del: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5h11v14H9l-6-7z"/><path d="m12 9 5 6M17 9l-5 6"/></svg>',
+  shh: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M3 3l18 18"/></svg>',
+};
+
+function bauble(p, size = 64) {
+  const c = p.colour, id = 'g' + p.name;
+  return `<svg class="bauble" width="${size}" height="${size * 1.25}" viewBox="0 0 64 80" aria-hidden="true">
+    <defs><radialGradient id="${id}" cx="35%" cy="35%" r="70%"><stop offset="0" stop-color="#fff" stop-opacity=".85"/><stop offset=".25" stop-color="${c}"/><stop offset="1" stop-color="${c}" stop-opacity=".75"/></radialGradient></defs>
+    <path d="M32 0v8" stroke="#f2c14e" stroke-width="2"/>
+    <circle cx="32" cy="7" r="4" fill="none" stroke="#f2c14e" stroke-width="2"/>
+    <rect x="24" y="10" width="16" height="9" rx="2" fill="#f2c14e"/><rect x="24" y="16" width="16" height="3" fill="#c99a2e"/>
+    <circle cx="32" cy="48" r="29" fill="url(#${id})" stroke="rgba(0,0,0,.15)" stroke-width="1.5"/>
+    <path d="M5 44 Q32 54 59 44" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="3" stroke-dasharray="1 6" stroke-linecap="round"/>
+    <text x="32" y="58" text-anchor="middle" font-family="Mountains of Christmas,Georgia,serif" font-weight="700" font-size="30" fill="#fff" stroke="rgba(0,0,0,.25)" stroke-width="1">${esc(p.name[0])}</text>
+  </svg>`;
+}
+function lights() {
+  const cols = ['#ff4d5a', '#42e08a', '#ffd34d', '#4dc3ff', '#ff8ae0'];
+  let bulbs = '';
+  for (let i = 0; i < 13; i++) {
+    const x = 15 + i * 30, y = 9 + Math.sin((i / 12) * Math.PI) * 12;
+    bulbs += `<g class="bulb" style="color:${cols[i % 5]}"><rect x="${x - 3}" y="${y - 2}" width="6" height="5" fill="#2a3a2a"/><ellipse cx="${x}" cy="${y + 9}" rx="5.5" ry="8" fill="currentColor"/></g>`;
+  }
+  return `<svg class="lights" viewBox="0 0 400 38" preserveAspectRatio="none" aria-hidden="true"><path d="M0 4 Q200 40 400 4" fill="none" stroke="#2a3a2a" stroke-width="2"/>${bulbs}</svg>`;
+}
+const snowmanSVG = `<svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="88" r="28" fill="#fff"/><circle cx="60" cy="48" r="20" fill="#fff"/><circle cx="53" cy="44" r="2.5" fill="#222"/><circle cx="67" cy="44" r="2.5" fill="#222"/><path d="M60 50l14 4-14 2z" fill="#ff8a1f"/><path d="M42 62h36l-4 8H46z" fill="#d62839"/><rect x="72" y="62" width="8" height="20" rx="3" fill="#d62839"/><rect x="44" y="18" width="32" height="8" rx="2" fill="#222"/><rect x="49" y="2" width="22" height="18" rx="2" fill="#222"/><circle cx="60" cy="82" r="3" fill="#222"/><circle cx="60" cy="94" r="3" fill="#222"/></svg>`;
+
+/* ---------- sky + ground ---------- */
+function buildSky() {
+  const sky = $('#sky');
+  for (let i = 0; i < 40; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 45 + '%';
+    s.style.animationDelay = Math.random() * 3 + 's';
+    sky.appendChild(s);
+  }
+  sky.insertAdjacentHTML('beforeend', `<svg class="sleigh" viewBox="0 0 190 60" fill="#ffe9a8" aria-hidden="true">
+    <g><ellipse cx="22" cy="30" rx="13" ry="6"/><circle cx="36" cy="24" r="4.5"/><path d="M36 20l-2-10M36 20l3-9M34 13l-4-2M38 14l4-3" stroke="#ffe9a8" stroke-width="1.6" fill="none"/>
+      <path d="M13 34l-4 9M18 35l-1 9M27 35l2 9M31 34l5 8" stroke="#ffe9a8" stroke-width="2" fill="none"/></g>
+    <g transform="translate(46 4)"><ellipse cx="22" cy="30" rx="13" ry="6"/><circle cx="36" cy="24" r="4.5"/><path d="M36 20l-2-10M36 20l3-9M34 13l-4-2M38 14l4-3" stroke="#ffe9a8" stroke-width="1.6" fill="none"/>
+      <path d="M13 34l-4 9M18 35l-1 9M27 35l2 9M31 34l5 8" stroke="#ffe9a8" stroke-width="2" fill="none"/><circle cx="40" cy="24" r="2" fill="#ff4d5a"/></g>
+    <path d="M10 31 Q60 40 110 38 M56 35 Q90 40 118 40" stroke="#ffe9a8" stroke-width="1" fill="none" opacity=".7"/>
+    <path d="M118 30h50q8 0 8-10v-6l-10 4h-34q-10 0-14 12z"/><path d="M114 44h62q8 0 10-6" stroke="#ffe9a8" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M124 34v10M168 34v10" stroke="#ffe9a8" stroke-width="2"/>
+    <circle cx="150" cy="8" r="7"/><path d="M143 16h14l2 12h-18z"/><path d="M146 2l10-2 2 5z" fill="#ff4d5a"/>
+    <rect x="158" y="10" width="12" height="10" rx="2"/></svg>`);
+  const trees = (xs) => xs.map(([x, s]) => `<path d="M${x} ${70 - 52 * s}l${14 * s} ${20 * s}h${-6 * s}l${12 * s} ${16 * s}h${-7 * s}l${12 * s} ${16 * s}H${x - 26 * s}l${12 * s} ${-16 * s}h${-7 * s}l${12 * s} ${-16 * s}h${-6 * s}z" fill="#0f3b2a"/>`).join('');
+  $('#ground').innerHTML = `<svg viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true">
+    ${trees([[30, 1], [62, .7], [345, 1.1], [376, .75]])}
+    <path d="M0 70 Q60 40 140 64 T280 60 T400 56V120H0z" fill="#dbe8ff"/>
+    <path d="M0 86 Q90 62 200 84 T400 78V120H0z" fill="#f8fbff"/></svg>`;
+}
+
+function initSnow() {
+  const c = $('#snow'), ctx = c.getContext('2d');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let w, h, flakes = [];
+  const size = () => {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    w = innerWidth; h = innerHeight; c.width = w * dpr; c.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const n = reduce ? 0 : Math.round(Math.min(150, (w * h) / 7000));
+    flakes = Array.from({ length: n }, () => ({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 2.6 + .8, vy: Math.random() * .6 + .3, ph: Math.random() * 6.28 }));
+  };
+  size(); addEventListener('resize', size);
+  const tick = (t) => {
+    ctx.clearRect(0, 0, w, h); ctx.fillStyle = 'rgba(255,255,255,.85)';
+    for (const f of flakes) {
+      f.y += f.vy * f.r * .6; f.x += Math.sin(t / 1800 + f.ph) * .35;
+      if (f.y > h + 5) { f.y = -5; f.x = Math.random() * w; }
+      ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, 6.283); ctx.fill();
+    }
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+
+/* confetti burst */
+const FX = { parts: [], running: false };
+function burst(x, y, n = 90) {
+  const cols = ['#d62839', '#1f7a4d', '#f2c14e', '#ffffff', '#4dc3ff'];
+  for (let i = 0; i < n; i++) {
+    const a = Math.random() * Math.PI * 2, v = Math.random() * 9 + 3;
+    FX.parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 6, s: Math.random() * 6 + 4, c: cols[i % cols.length], r: Math.random() * 6, vr: Math.random() * .3 - .15, star: i % 4 === 0, life: 1 });
+  }
+  if (!FX.running) { FX.running = true; requestAnimationFrame(fxTick); }
+}
+function fxTick() {
+  const c = $('#fx'), ctx = c.getContext('2d');
+  const dpr = Math.min(devicePixelRatio || 1, 2);
+  if (c.width !== innerWidth * dpr) { c.width = innerWidth * dpr; c.height = innerHeight * dpr; }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, innerWidth, innerHeight);
+  FX.parts = FX.parts.filter((p) => p.life > 0);
+  for (const p of FX.parts) {
+    p.vy += .32; p.vx *= .985; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.life -= .011;
+    ctx.save(); ctx.globalAlpha = Math.max(0, Math.min(1, p.life * 1.6)); ctx.translate(p.x, p.y); ctx.rotate(p.r); ctx.fillStyle = p.c;
+    if (p.star) { ctx.beginPath(); for (let k = 0; k < 10; k++) { const rr = k % 2 ? p.s * .45 : p.s; ctx.lineTo(Math.cos(k * Math.PI / 5) * rr, Math.sin(k * Math.PI / 5) * rr); } ctx.fill(); }
+    else ctx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2);
+    ctx.restore();
+  }
+  if (FX.parts.length) requestAnimationFrame(fxTick); else { FX.running = false; ctx.clearRect(0, 0, innerWidth, innerHeight); }
+}
+
+/* ---------- sound ---------- */
+let AC = null;
+function audio() { return S.sound ? getAC() : null; }
+function getAC() {
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    if (AC.state === 'suspended') AC.resume();
+    return AC;
+  } catch { return null; }
+}
+function bell(freq, when = 0, dur = 1.1, vol = .16) {
+  const a = audio(); if (!a) return;
+  const t0 = a.currentTime + when;
+  [[1, 1], [2, .45], [3, .22], [4.2, .14], [5.4, .08]].forEach(([m, amp]) => {
+    const o = a.createOscillator(), g = a.createGain();
+    o.type = 'sine'; o.frequency.value = freq * m;
+    g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol * amp, t0 + .01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur / Math.sqrt(m));
+    o.connect(g).connect(a.destination); o.start(t0); o.stop(t0 + dur + .05);
+  });
+}
+function pop() {
+  const a = audio(); if (!a) return;
+  const o = a.createOscillator(), g = a.createGain(), t = a.currentTime;
+  o.type = 'triangle'; o.frequency.setValueAtTime(520, t); o.frequency.exponentialRampToValueAtTime(980, t + .07);
+  g.gain.setValueAtTime(.08, t); g.gain.exponentialRampToValueAtTime(.0001, t + .12);
+  o.connect(g).connect(a.destination); o.start(t); o.stop(t + .13);
+}
+function sparkle() { [2093, 2637, 3136, 2349, 2794].forEach((f, i) => bell(f, i * .06, .5, .05)); }
+function chime() { [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => bell(f, i * .11, 1.2, .12)); }
+function jingle() {
+  const E = 659.25, G = 783.99, C = 523.25, D = 587.33, b = .2;
+  [[E, 0], [E, 1], [E, 2], [E, 4], [E, 5], [E, 6], [E, 8], [G, 9], [C, 10], [D, 11], [E, 12]]
+    .forEach(([f, k]) => bell(f, k * b, k === 12 ? 1.6 : .8, .14));
+  setTimeout(sparkle, 2400);
+}
+function sadTrombone() { [392, 370, 349].forEach((f, i) => bell(f, i * .2, .6, .1)); }
+
+/* festive music: out-of-copyright carols, synthesised */
+const noteFreq = (n) => {
+  const m = n.match(/^([A-G])(#|b)?(\d)$/);
+  const st = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }[m[1]] + (m[2] === '#' ? 1 : m[2] === 'b' ? -1 : 0);
+  return 440 * 2 ** (((+m[3] + 1) * 12 + st - 69) / 12);
+};
+const tune = (bpm, str) => ({ bpm, seq: str.trim().split(/\s+/).map((t) => { const [n, d] = t.split(':'); return [n === 'R' ? 0 : noteFreq(n), +d]; }) });
+const TUNES = [
+  tune(150, 'E5:1 E5:1 E5:2 E5:1 E5:1 E5:2 E5:1 G5:1 C5:1.5 D5:.5 E5:4 F5:1 F5:1 F5:1.5 F5:.5 F5:1 E5:1 E5:1 E5:.5 E5:.5 E5:1 D5:1 D5:1 E5:1 D5:2 G5:2 E5:1 E5:1 E5:2 E5:1 E5:1 E5:2 E5:1 G5:1 C5:1.5 D5:.5 E5:4 F5:1 F5:1 F5:1 F5:1 F5:1 E5:1 E5:1 E5:.5 E5:.5 G5:1 G5:1 F5:1 D5:1 C5:4'),
+  tune(132, 'G5:1.5 F5:.5 E5:1 D5:1 C5:1 D5:1 E5:1 C5:1 D5:.5 E5:.5 F5:.5 D5:.5 E5:1.5 D5:.5 C5:1 B4:1 C5:2 G5:1.5 F5:.5 E5:1 D5:1 C5:1 D5:1 E5:1 C5:1 D5:.5 E5:.5 F5:.5 D5:.5 E5:1.5 D5:.5 C5:1 B4:1 C5:2 D5:1.5 E5:.5 F5:1 D5:1 E5:1.5 F5:.5 G5:1 D5:1 E5:.5 F#5:.5 G5:1 A5:.5 B5:.5 C6:1 B5:1 A5:1 G5:2 G5:1.5 F5:.5 E5:1 D5:1 C5:1 D5:1 E5:1 C5:1 A5:.5 A5:.5 A5:.5 A5:.5 G5:1.5 F5:.5 E5:1 D5:1 C5:2'),
+  tune(165, 'G4:1 C5:1 C5:.5 D5:.5 C5:.5 B4:.5 A4:1 A4:1 A4:1 D5:1 D5:.5 E5:.5 D5:.5 C5:.5 B4:1 G4:1 G4:1 E5:1 E5:.5 F5:.5 E5:.5 D5:.5 C5:1 A4:1 G4:.5 G4:.5 A4:1 D5:1 B4:1 C5:3'),
+];
+const M = { playing: false, timer: 0, t: 0, i: 0, pos: 0, next: 0, gain: null, noise: null, ticks: 0 };
+window.__music = M;
+const MUSIC_VOL = .09;
+function musicNote(a, f, t, dur) {
+  const g = a.createGain(), o1 = a.createOscillator(), o2 = a.createOscillator(), g2 = a.createGain();
+  o1.type = 'triangle'; o1.frequency.value = f; o2.type = 'sine'; o2.frequency.value = f * 2; g2.gain.value = .25;
+  const end = t + Math.max(.12, dur * .92);
+  g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(1, t + .012);
+  g.gain.exponentialRampToValueAtTime(.35, t + Math.min(dur * .6, .4)); g.gain.exponentialRampToValueAtTime(.0001, end + .08);
+  o1.connect(g); o2.connect(g2).connect(g); g.connect(M.gain);
+  o1.start(t); o2.start(t); o1.stop(end + .1); o2.stop(end + .1);
+}
+function shaker(a, t, accent) {
+  if (!M.noise) {
+    const b = a.createBuffer(1, a.sampleRate * .2, a.sampleRate), d = b.getChannelData(0);
+    for (let k = 0; k < d.length; k++) d[k] = Math.random() * 2 - 1;
+    M.noise = b;
+  }
+  const src = a.createBufferSource(), hp = a.createBiquadFilter(), g = a.createGain();
+  src.buffer = M.noise; hp.type = 'highpass'; hp.frequency.value = 7000;
+  g.gain.setValueAtTime(accent ? .5 : .28, t); g.gain.exponentialRampToValueAtTime(.0001, t + .09);
+  src.connect(hp).connect(g).connect(M.gain); src.start(t); src.stop(t + .12);
+}
+function scheduleMusic() {
+  const a = AC; if (!a || !M.playing) return;
+  M.ticks++;
+  while (M.next < a.currentTime + .3) {
+    const T = TUNES[M.t];
+    if (M.i >= T.seq.length) { M.t = (M.t + 1) % TUNES.length; M.i = 0; M.pos = 0; M.next += .9; continue; }
+    const [f, d] = T.seq[M.i], spb = 60 / T.bpm;
+    if (f) musicNote(a, f, M.next, d * spb);
+    for (let b = Math.ceil(M.pos - 1e-6); b < M.pos + d - 1e-6; b++) shaker(a, M.next + (b - M.pos) * spb, b % 2 === 0);
+    M.pos += d; M.next += d * spb; M.i++;
+  }
+}
+function startMusic() {
+  if (M.playing || !S.music || document.hidden) return;
+  const a = getAC(); if (!a) return;
+  M.gain = a.createGain(); M.gain.gain.value = MUSIC_VOL; M.gain.connect(a.destination);
+  M.playing = true; M.next = a.currentTime + .15;
+  clearInterval(M.timer); M.timer = setInterval(scheduleMusic, 60); scheduleMusic();
+}
+function stopMusic() {
+  clearInterval(M.timer); M.playing = false;
+  const g = M.gain; M.gain = null;
+  if (g && AC) { g.gain.setTargetAtTime(.0001, AC.currentTime, .08); setTimeout(() => { try { g.disconnect(); } catch {} }, 600); }
+}
+function duckMusic(sec) {
+  if (!M.gain || !AC) return;
+  const g = M.gain.gain, t = AC.currentTime;
+  g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(.012, t + .15);
+  g.setValueAtTime(.012, t + sec); g.linearRampToValueAtTime(MUSIC_VOL, t + sec + .6);
+}
+['pointerdown', 'keydown'].forEach((ev) => addEventListener(ev, () => startMusic(), { capture: true }));
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { M.wasPlaying = M.playing; stopMusic(); }
+  else if (M.wasPlaying) startMusic();
+});
+
+/* the Robert alarm */
+function sirenSound(sec) {
+  const a = audio(); if (!a) return;
+  const t = a.currentTime;
+  const o = a.createOscillator(), lfo = a.createOscillator(), depth = a.createGain(), lp = a.createBiquadFilter(), g = a.createGain();
+  o.type = 'sawtooth'; o.frequency.value = 900;
+  lfo.type = 'triangle'; lfo.frequency.value = 1.5; depth.gain.value = 380;
+  lfo.connect(depth).connect(o.frequency);
+  lp.type = 'lowpass'; lp.frequency.value = 2600;
+  g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.07, t + .05);
+  g.gain.setValueAtTime(.07, t + sec - .3); g.gain.exponentialRampToValueAtTime(.0001, t + sec);
+  o.connect(lp).connect(g).connect(a.destination);
+  o.start(t); lfo.start(t); o.stop(t + sec + .05); lfo.stop(t + sec + .05);
+}
+const SIREN_SVG = `<svg class="siren" viewBox="0 0 64 80" aria-hidden="true"><g class="beam"><path d="M32 32 L-40 8 L-40 56Z" fill="rgba(255,240,120,.55)"/><path d="M32 32 L104 8 L104 56Z" fill="rgba(255,240,120,.55)"/></g>
+  <path d="M14 60V36a18 18 0 0 1 36 0v24z" fill="#ff2a2a" stroke="#7a0000" stroke-width="2"/>
+  <path d="M22 38a10 10 0 0 1 10-10" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".75" fill="none"/>
+  <rect x="8" y="60" width="48" height="11" rx="3" fill="#333"/><rect x="4" y="71" width="56" height="6" rx="2" fill="#1a1a1a"/></svg>`;
+function showAlarm(withSound = true) {
+  const el = $('#alarm'); if (!el) return;
+  el.innerHTML = `${SIREN_SVG}<div class="alarm-text">TWAT<br>DETECTED</div>${SIREN_SVG}`;
+  el.classList.add('on');
+  if (withSound) { sirenSound(4); duckMusic(4.2); }
+  const hide = () => { el.classList.remove('on'); el.innerHTML = ''; };
+  el.onclick = hide; clearTimeout(showAlarm.t); showAlarm.t = setTimeout(hide, 4500);
+}
+
+/* ---------- state ---------- */
+const S = {
+  view: 'loading', me: null, listOwner: null, people: {}, items: [], year: new Date().getFullYear(),
+  ready: false, error: null, pin: null, dragging: false, pending: false,
+  sound: (() => { try { return localStorage.getItem(SOUND_KEY) !== 'off'; } catch { return true; } })(),
+  music: (() => { try { return localStorage.getItem(MUSIC_KEY) !== 'off'; } catch { return true; } })(),
+  metaChecked: false,
+};
+let store = null;
+
+function itemsFor(owner) {
+  return S.items.filter((i) => i.owner === owner && i.year === S.year && !i.removed)
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || (a.createdAt ?? 0) - (b.createdAt ?? 0));
+}
+function getSession() { try { return JSON.parse(localStorage.getItem(SESSION_KEY)); } catch { return null; } }
+function setSession(v) { try { v ? localStorage.setItem(SESSION_KEY, JSON.stringify(v)) : localStorage.removeItem(SESSION_KEY); } catch {} }
+
+/* ---------- data stores ---------- */
+async function firebaseStore() {
+  const base = `https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}`;
+  const [appMod, authMod, fs] = await Promise.all([
+    import(`${base}/firebase-app.js`), import(`${base}/firebase-auth.js`), import(`${base}/firebase-firestore.js`),
+  ]);
+  const app = appMod.initializeApp(FIREBASE_CONFIG, 'family-xmas-list');
+  const auth = authMod.getAuth(app);
+  await authMod.signInAnonymously(auth);
+  const db = fs.getFirestore(app);
+  const { collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, setDoc, writeBatch, runTransaction } = fs;
+  return {
+    init(onData, onError) {
+      const cache = { people: {}, items: [], meta: null }, got = new Set();
+      const emit = () => { if (got.size === 3) onData({ ...cache }); };
+      onSnapshot(collection(db, 'xmasPeople'), (s) => { cache.people = {}; s.forEach((d) => { cache.people[d.id] = d.data(); }); got.add('p'); emit(); }, onError);
+      onSnapshot(collection(db, 'xmasItems'), (s) => { cache.items = s.docs.map((d) => ({ id: d.id, ...d.data() })); got.add('i'); emit(); }, onError);
+      onSnapshot(doc(db, 'xmasMeta', 'settings'), (s) => { cache.meta = s.exists() ? s.data() : null; got.add('m'); emit(); }, onError);
+    },
+    addItem: (data) => addDoc(collection(db, 'xmasItems'), data),
+    updateItem: (id, p) => updateDoc(doc(db, 'xmasItems', id), p),
+    deleteItem: (id) => deleteDoc(doc(db, 'xmasItems', id)),
+    reorder: async (list) => { const b = writeBatch(db); list.forEach(({ id, order }) => b.update(doc(db, 'xmasItems', id), { order })); await b.commit(); },
+    setPerson: (n, d) => setDoc(doc(db, 'xmasPeople', n), d),
+    deletePerson: (n) => deleteDoc(doc(db, 'xmasPeople', n)),
+    setMeta: (p) => setDoc(doc(db, 'xmasMeta', 'settings'), p, { merge: true }),
+    claim: (id, patch) => runTransaction(db, async (t) => {
+      const r = doc(db, 'xmasItems', id), s = await t.get(r);
+      if (!s.exists() || s.data().removed) throw new Error('gone');
+      if (s.data().boughtBy) throw new Error('taken');
+      t.update(r, patch);
+    }),
+  };
+}
+
+function demoStore() {
+  const KEY = 'xmasListDemoV1';
+  const ch = 'BroadcastChannel' in window ? new BroadcastChannel('xmas-list-demo') : null;
+  let listener = null;
+  const blank = () => ({ people: {}, items: {}, meta: null });
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || blank(); } catch { return blank(); } };
+  const emit = () => { const d = load(); listener?.({ people: d.people, items: Object.entries(d.items).map(([id, v]) => ({ id, ...v })), meta: d.meta }); };
+  const save = (d) => { localStorage.setItem(KEY, JSON.stringify(d)); ch?.postMessage(1); setTimeout(emit, 0); };
+  addEventListener('storage', (e) => { if (e.key === KEY) emit(); });
+  if (ch) ch.onmessage = emit;
+  const mut = (fn) => async (...a) => { const d = load(); fn(d, ...a); save(d); };
+  return {
+    init(onData) { listener = onData; setTimeout(emit, 80); },
+    addItem: mut((d, data) => { d.items[uid()] = data; }),
+    updateItem: mut((d, id, p) => { if (!d.items[id]) throw new Error('gone'); Object.assign(d.items[id], p); }),
+    deleteItem: mut((d, id) => { delete d.items[id]; }),
+    reorder: mut((d, list) => { list.forEach(({ id, order }) => { if (d.items[id]) d.items[id].order = order; }); }),
+    setPerson: mut((d, n, data) => { d.people[n] = data; }),
+    deletePerson: mut((d, n) => { delete d.people[n]; }),
+    setMeta: mut((d, p) => { d.meta = { ...(d.meta || {}), ...p }; }),
+    claim: mut((d, id, patch) => {
+      const it = d.items[id];
+      if (!it || it.removed) throw new Error('gone');
+      if (it.boughtBy) throw new Error('taken');
+      Object.assign(it, patch);
+    }),
+  };
+}
+
+function friendlyError(e) {
+  const code = e?.code || e?.message || String(e);
+  if (/permission/i.test(code)) return `The North Pole said no (permission denied). Check the Firestore rules are published. [${code}]`;
+  if (/operation-not-allowed|admin-restricted/i.test(code)) return `Anonymous sign-in isn't switched on in Firebase Authentication. [${code}]`;
+  if (/unauthorized-domain/i.test(code)) return `This web address isn't on Firebase's authorised domains list. [${code}]`;
+  return `Couldn't reach the North Pole. Check your connection and try again. [${code}]`;
+}
+function onError(e) {
+  console.error(e);
+  S.error = friendlyError(e);
+  render();
+}
+function onData(d) {
+  S.people = d.people || {};
+  S.items = d.items || [];
+  S.year = d.meta?.year || new Date().getFullYear();
+  S.error = null;
+  if (!d.meta && !S.metaChecked) { S.metaChecked = true; store.setMeta({ year: S.year }).catch(onError); }
+  S.metaChecked = true;
+  const saved = getSession();
+  if (S.me) {
+    if (!saved || (!isManaged(S.me) && S.people[S.me]?.pinHash !== saved.hash)) { S.me = null; setSession(null); S.view = 'login'; toast('Your PIN was reset. Please sign in again.', true); }
+  } else if (saved && byName(saved.name) && (isManaged(saved.name) ? saved.hash === NO_PIN : S.people[saved.name]?.pinHash === saved.hash) && S.view === 'loading') {
+    S.me = saved.name; S.view = 'home';
+    if (S.me === 'Robert') setTimeout(() => showAlarm(false), 400);
+  }
+  if (S.view === 'loading') S.view = 'login';
+  S.ready = true;
+  render();
+}
+
+/* ---------- render ---------- */
+function render() {
+  if (S.dragging) { S.pending = true; return; }
+  const v = S.view;
+  let html = '';
+  if (v === 'loading') html = viewLoading();
+  else if (v === 'login') html = viewLogin();
+  else if (v === 'pin') html = viewPin();
+  else if (!S.me) { S.view = 'login'; html = viewLogin(); }
+  else if (v === 'home') html = viewHome();
+  else if (v === 'list') html = viewList();
+  else if (v === 'shopping') html = viewShopping();
+  else if (v === 'admin') html = S.me === ADMIN ? viewAdmin() : viewHome();
+  $('#app').innerHTML = html;
+}
+function go(view, extra = {}) {
+  Object.assign(S, extra, { view });
+  render();
+  scrollTo(0, 0);
+}
+
+const errBanner = () => (S.error ? `<div class="banner">${esc(S.error)}</div>` : '');
+const footer = () => `<p class="foot">The Family Christmas List v${VERSION}${DEMO ? ' · demo mode (saved on this device only)' : ''}</p>`;
+
+function viewLoading() {
+  return `${lights()}<div class="loading">
+    <svg class="spin" viewBox="0 0 24 24" style="color:#f2c14e">${I.star.replace(/<\/?svg[^>]*>/g, '')}</svg>
+    <div class="festive">Checking with the elves...</div>
+    ${S.error ? `${errBanner()}<button class="btn block gold" data-act="reload">Try again</button>` : ''}
+  </div>`;
+}
+
+function personButton(p) {
+  return `<button class="person" data-act="pick" data-name="${esc(p.name)}" aria-label="I'm ${esc(p.name)}">${bauble(p, 62)}<span>${esc(p.name)}</span></button>`;
+}
+function viewLogin() {
+  const adults = PEOPLE.filter((p) => p.adult);
+  const kids = PEOPLE.filter((p) => !p.adult);
+  return `${lights()}<div class="corner">${audioButtons()}</div>
+    <h1 class="title">The Family<br>Christmas List</h1>
+    <p class="countdown">${countdownHTML()}</p>
+    ${errBanner()}
+    <h2 class="sub center">Who's there?</h2>
+    <div class="bauble-grid">${adults.map(personButton).join('')}</div>
+    <h2 class="sub center">Little elves</h2>
+    <div class="bauble-grid">${kids.map(personButton).join('')}</div>
+    ${footer()}`;
+}
+
+function viewPin() {
+  const P = S.pin, p = byName(P.who);
+  const heads = {
+    enter: [`Hello, ${P.who}!`, 'Type your secret PIN'],
+    set: [`Welcome, ${P.who}!`, 'Choose a secret 4-number PIN. You will need it on any new phone or computer.'],
+    confirm: ['One more time', 'Type the same PIN again to make sure'],
+  };
+  const [h, sub] = heads[P.stage];
+  const dots = [0, 1, 2, 3].map((i) => `<span class="dot ${i < P.entry.length ? 'on' : ''}"></span>`).join('');
+  const keys = [1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => `<button class="key" data-act="pinkey" data-k="${n}">${n}</button>`).join('');
+  return `${lights()}<div class="pinwrap">
+    <button class="back" data-act="pinback">${I.back} Not ${esc(P.who)}?</button>
+    <div style="display:flex;justify-content:center;margin-top:6px">${bauble(p, 80)}</div>
+    <h1>${esc(h)}</h1>
+    <p class="hint">${esc(sub)}</p>
+    <div class="dots ${P.shake ? 'shake' : ''}">${dots}</div>
+    <p class="pinerr">${esc(P.err || '')}</p>
+    <div class="pad">${keys}
+      <span></span><button class="key" data-act="pinkey" data-k="0">0</button>
+      <button class="key plain" data-act="pindel" aria-label="Delete">${I.del}</button>
+    </div>
+    ${P.stage === 'enter' ? `<p class="hint" style="margin-top:20px">Forgotten it? Ask ${ADMIN} to reset it.</p>` : ''}
+    ${errBanner()}
+  </div>`;
+}
+
+function audioButtons() {
+  return `<button class="iconbtn" data-act="music" aria-label="Music ${S.music ? 'on' : 'off'}">${S.music ? I.music : I.musicOff}</button>
+      <button class="iconbtn" data-act="sound" aria-label="Sound effects ${S.sound ? 'on' : 'off'}">${S.sound ? I.soundOn : I.soundOff}</button>`;
+}
+function topbar(active) {
+  const me = byName(S.me);
+  const tabs = me.adult ? `<nav class="tabs">
+      <button class="tab ${active === 'home' ? 'on' : ''}" data-act="nav" data-v="home">${I.list} Lists</button>
+      <button class="tab ${active === 'shopping' ? 'on' : ''}" data-act="nav" data-v="shopping">${I.bag} Shopping</button>
+      ${S.me === ADMIN ? `<button class="tab ${active === 'admin' ? 'on' : ''}" data-act="nav" data-v="admin">${I.key} Admin</button>` : ''}
+    </nav>` : '';
+  return `<header class="topbar">${lights()}
+    <div class="row">${bauble(me, 40)}
+      <div class="who"><div class="hello">Hello, ${esc(me.name)}</div><div class="cd">${esc(countdownText())}</div></div>
+      ${audioButtons()}
+      <button class="iconbtn" data-act="logout" aria-label="Switch person">${I.door}</button>
+    </div>${tabs}</header>${errBanner()}`;
+}
+
+function listCard(p) {
+  const items = itemsFor(p.name);
+  const see = canSeeBought(S.me, p.name);
+  const sorted = items.filter((i) => i.boughtBy).length;
+  const pill = see && items.length
+    ? `<span class="pill ${sorted === items.length ? 'ok' : ''}">${sorted} of ${items.length} sorted</span>`
+    : `<span class="pill">${items.length ? plural(items.length, 'wish', 'wishes') : 'No wishes yet'}</span>`;
+  return `<button class="card" data-act="open" data-owner="${esc(p.name)}">${bauble(p, 52)}
+    <span class="ct"><b>${esc(p.name)}</b>${pill}</span></button>`;
+}
+
+function viewHome() {
+  const me = S.me, mine = itemsFor(me);
+  const looked = PEOPLE.filter((p) => p.managedBy?.includes(me));
+  const others = PEOPLE.filter((p) => p.name !== me && !looked.includes(p));
+  const notices = byName(me).adult
+    ? S.items.filter((i) => i.removed && isMyPurchase(i, me)).map((i) => `<div class="notice">${I.bell}
+        <div><b>${esc(i.owner)}</b> took <b>"${esc(i.title)}"</b> off their list, but it was marked as bought by ${esc(buyerLabel(i))}. You might want to keep the receipt.</div>
+        <button class="btn small gold" data-act="dismiss" data-id="${esc(i.id)}">Got it</button></div>`).join('')
+    : '';
+  return `${topbar('home')}${notices}
+    <button class="card mine" data-act="open" data-owner="${esc(me)}">${bauble(byName(me), 56)}
+      <span class="ct"><b>My wishlist</b><small>${mine.length ? plural(mine.length, 'wish', 'wishes') + (isManaged(me) ? ' · tap to see them' : ' · tap to add or sort') : (isManaged(me) ? 'Nothing on it yet' : 'Tap here to write your first wish')}</small></span>${I.chev.replace('<svg', '<svg class="chev"')}</button>
+    ${looked.length ? `<h2 class="sub">Lists you look after</h2><div class="grid">${looked.map(listCard).join('')}</div>` : ''}
+    <h2 class="sub">Family wishlists</h2>
+    <div class="grid">${others.map(listCard).join('')}</div>
+    ${footer()}`;
+}
+
+function itemCard(i, idx, ctx) {
+  const me = S.me;
+  const bought = ctx.see && !!i.boughtBy;
+  const mineBuy = bought && isMyPurchase(i, me);
+  const href = i.link ? safeHref(i.link) : null;
+  const acts = [];
+  if (href) acts.push(`<a class="btn small ghost" href="${esc(href)}" target="_blank" rel="noopener noreferrer">${I.link} ${esc(domainOf(href))}</a>`);
+  if (ctx.see && !i.boughtBy) acts.push(`<button class="btn small green" data-act="buy" data-id="${esc(i.id)}">${I.gift} I'll get this</button>`);
+  if (mineBuy) acts.push(`<button class="btn small ghost" data-act="undo" data-id="${esc(i.id)}">Undo</button>`);
+  if (ctx.edit) {
+    acts.push('<span class="spacer"></span>');
+    acts.push(`<button class="mini" data-act="edit" data-id="${esc(i.id)}" aria-label="Edit">${I.edit}</button>`);
+    acts.push(`<button class="mini danger" data-act="del" data-id="${esc(i.id)}" aria-label="Delete">${I.bin}</button>`);
+  }
+  return `<li class="item tag-${esc(i.tag || 'like')} ${bought ? 'is-bought' : ''}" data-id="${esc(i.id)}">
+    ${ctx.drag ? `<span class="handle" data-handle aria-label="Drag to reorder">${I.grip}</span>` : ''}
+    <span class="rank">${idx + 1}</span>
+    <div class="ib">
+      <div class="ititle">${esc(i.title)}</div>
+      <div class="imeta"><span class="chip ${esc(i.tag || 'like')}">${esc(TAGS[i.tag] || TAGS.like)}</span>${i.price ? `<span class="price">${esc(i.price)}</span>` : ''}</div>
+      ${i.notes ? `<div class="notes">${esc(i.notes)}</div>` : ''}
+      ${bought ? `<div class="boughtby">${I.gift} ${mineBuy ? (i.joint ? `You're getting this (joint with ${esc(i.boughtBy === me ? partnerOf(me) : i.boughtBy)})` : "You're getting this") : `Bought by ${esc(buyerLabel(i))}`}</div>` : ''}
+      ${acts.length ? `<div class="iactions">${acts.join('')}</div>` : ''}
+    </div>
+    ${bought ? '<span class="stamp">Bought</span>' : ''}
+  </li>`;
+}
+
+function viewList() {
+  const owner = S.listOwner, p = byName(owner), me = S.me;
+  if (!p) return viewHome();
+  const ctx = { edit: canEdit(me, owner), see: canSeeBought(me, owner) };
+  const items = itemsFor(owner);
+  ctx.drag = ctx.edit && items.length > 1;
+  const title = owner === me ? 'My wishlist' : `${owner}'s wishlist`;
+  let help = '';
+  if (owner === me && isManaged(me)) help = `<div class="shh">${I.star}<span>${esc(byName(me).managedBy.join(' and '))} look after your list. Tell them if you think of something new!</span></div>`;
+  else if (owner === me) help = `<div class="shh">${I.shh}<span>No peeking! You'll never see what's been bought from your own list. ${items.length > 1 ? 'Drag the handles to put your favourites at the top.' : ''}</span></div>`;
+  else if (ctx.edit) help = `<div class="shh">${I.star}<span>You look after ${esc(owner)}'s list. Add wishes and drag them into order${ctx.see ? ', and you can still see what has been bought' : ''}.</span></div>`;
+  else if (ctx.see) help = `<div class="shh">${I.gift}<span>Tap "I'll get this" to claim a present. Everyone else will see it's sorted, but ${esc(owner)} won't.</span></div>`;
+  const list = items.length
+    ? `<ul class="items" id="items">${items.map((i, k) => itemCard(i, k, ctx)).join('')}</ul>`
+    : `<div class="empty">${snowmanSVG}<p class="festive" style="font-size:26px;margin:6px 0">No wishes yet</p>
+        <p>${ctx.edit ? 'Add the first one below.' : owner === me ? 'Nothing here yet. Check back soon!' : `${esc(owner)} hasn't written any wishes yet. Check back soon.`}</p></div>`;
+  return `${topbar(S.listFrom || 'home')}
+    <button class="back" data-act="nav" data-v="home">${I.back} All lists</button>
+    <div class="listhead">${bauble(p, 52)}<h1>${esc(title)}</h1></div>
+    ${help}${list}
+    ${ctx.edit ? `<button class="btn block gold" data-act="add">${I.plus} Add a wish</button>` : ''}
+    ${footer()}`;
+}
+
+function viewShopping() {
+  const me = S.me;
+  const mine = S.items.filter((i) => i.year === S.year && !i.removed && isMyPurchase(i, me));
+  const groups = PEOPLE.map((p) => [p, mine.filter((i) => i.owner === p.name)]).filter(([, l]) => l.length);
+  const body = groups.length
+    ? groups.map(([p, l]) => `<div class="group"><h3>${bauble(p, 30)} For ${esc(p.name)}</h3>
+        ${l.map((i) => { const href = i.link ? safeHref(i.link) : null; return `<div class="srow"><div class="ib"><b>${esc(i.title)}</b>
+          <small>${[i.price, i.joint ? `Joint with ${esc(i.boughtBy === me ? partnerOf(me) : i.boughtBy)}` : ''].filter(Boolean).map(esc).join(' · ')}</small></div>
+          ${href ? `<a class="mini" href="${esc(href)}" target="_blank" rel="noopener noreferrer" aria-label="Open link">${I.link}</a>` : ''}
+          <button class="btn small ghost" data-act="undo" data-id="${esc(i.id)}">Undo</button></div>`; }).join('')}</div>`).join('')
+    : `<div class="empty">${snowmanSVG}<p class="festive" style="font-size:26px;margin:6px 0">Nothing yet</p><p>Presents you claim on other people's lists will appear here.</p></div>`;
+  return `${topbar('shopping')}<h2 class="sub">My shopping</h2>
+    <p class="hint" style="text-align:left">${plural(mine.length, 'present', 'presents')} claimed${partnerOf(me) ? `, including joint ones with ${esc(partnerOf(me))}` : ''}.</p>
+    ${body}${footer()}`;
+}
+
+function viewAdmin() {
+  const rows = PEOPLE.filter((p) => !p.managedBy).map((p) => `<div class="arow">${bauble(p, 26)}<b>${esc(p.name)}</b>
+      ${S.people[p.name]?.pinHash ? `<button class="btn small ghost" data-act="resetpin" data-name="${esc(p.name)}">Reset PIN</button>` : '<span class="pill">No PIN yet</span>'}</div>`).join('');
+  return `${topbar('admin')}<h2 class="sub">North Pole control</h2>
+    <div class="group"><h3>PINs</h3><p class="hint" style="text-align:left;color:var(--muted)">Resetting a PIN keeps their list. They choose a new PIN next time they visit.</p>${rows}</div>
+    <div class="group"><h3>Christmas ${S.year}</h3>
+      <p>When Christmas is over, start a fresh year. Everyone gets an empty list. This year's lists are kept in the database but no longer shown.</p>
+      <button class="btn block" data-act="newyear">Start Christmas ${S.year + 1}</button></div>
+    ${footer()}`;
+}
+
+/* ---------- modal + toast ---------- */
+function openModal(html, onReady) {
+  const m = $('#modal');
+  m.innerHTML = `<div class="sheet">${html}</div>`;
+  m.classList.add('open');
+  onReady?.(m);
+}
+function closeModal() { const m = $('#modal'); m.classList.remove('open'); m.innerHTML = ''; }
+let toastTimer;
+function toast(msg, bad = false) {
+  const t = $('#toast');
+  t.textContent = msg; t.classList.toggle('bad', bad); t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+function confirmBox(title, text, yes, onYes, danger = true) {
+  openModal(`<h2>${esc(title)}</h2><p>${text}</p><div class="row">
+    <button class="btn ghost" data-act="close">Cancel</button>
+    <button class="btn ${danger ? '' : 'green'}" id="yes">${esc(yes)}</button></div>`, (m) => {
+    m.querySelector('#yes').onclick = async () => { closeModal(); try { await onYes(); } catch (e) { toast(friendlyError(e), true); } };
+  });
+}
+
+function itemForm(owner, item) {
+  const v = item || { title: '', link: '', price: '', notes: '', tag: 'like' };
+  const who = owner === S.me ? 'your' : `${owner}'s`;
+  openModal(`<h2>${item ? 'Edit wish' : 'New wish'}</h2>
+    <p style="color:var(--muted);font-weight:700">For ${esc(who)} list</p>
+    <form id="f" novalidate>
+      <label class="field"><span>What is it?</span><input name="wtitle" maxlength="80" required value="${esc(v.title)}" placeholder="e.g. LEGO Christmas train" autocomplete="off"></label>
+      <label class="field"><span>Link <em>(optional)</em></span><input name="link" inputmode="url" maxlength="600" value="${esc(v.link)}" placeholder="Paste a shop link" autocomplete="off"></label>
+      <label class="field"><span>Price <em>(optional)</em></span><input name="price" maxlength="20" value="${esc(v.price)}" placeholder="e.g. £25" autocomplete="off"></label>
+      <label class="field"><span>Notes <em>(size, colour and so on)</em></span><textarea name="notes" maxlength="240" placeholder="e.g. Size 9, the blue one">${esc(v.notes)}</textarea></label>
+      <div class="field"><span>How much do you want it?</span><div class="tagpick">
+        ${Object.entries(TAGS).map(([k, l]) => `<label class="t-${k}"><input type="radio" name="tag" value="${k}" ${v.tag === k ? 'checked' : ''}><div>${l}</div></label>`).join('')}
+      </div></div>
+      <div class="ferr" id="ferr"></div>
+      <div class="row"><button type="button" class="btn ghost" data-act="close">Cancel</button><button class="btn green" type="submit">${item ? 'Save' : 'Add to list'}</button></div>
+    </form>`, (m) => {
+    const f = m.querySelector('#f'), F = f.elements;
+    if (!item) F.wtitle.focus();
+    f.onsubmit = async (e) => {
+      e.preventDefault();
+      const title = F.wtitle.value.trim();
+      const link = normaliseLink(F.link.value);
+      if (!title) { m.querySelector('#ferr').textContent = 'Give your wish a name.'; return; }
+      if (!link.ok) { m.querySelector('#ferr').textContent = "That link doesn't look right. Copy it again from the shop's page."; return; }
+      const data = { title, link: link.url, price: F.price.value.trim(), notes: F.notes.value.trim(), tag: F.tag.value || 'like' };
+      f.querySelector('[type=submit]').disabled = true;
+      try {
+        if (item) { await store.updateItem(item.id, data); toast('Wish updated'); }
+        else {
+          const list = itemsFor(owner);
+          const order = list.length ? Math.max(...list.map((i) => i.order ?? 0)) + 1000 : 1000;
+          await store.addItem({ ...data, owner, year: S.year, order, createdAt: Date.now(), createdBy: S.me, boughtBy: null, joint: false, removed: false });
+          sparkle(); toast('Added to the list!');
+        }
+        closeModal();
+      } catch (err) { f.querySelector('[type=submit]').disabled = false; m.querySelector('#ferr').textContent = friendlyError(err); }
+    };
+  });
+}
+
+function buyBox(item) {
+  const me = S.me, partner = partnerOf(me) === item.owner ? null : partnerOf(me);
+  openModal(`<h2>Get this for ${esc(item.owner)}?</h2>
+    <div class="big-item">${esc(item.title)}${item.price ? ` <span class="price">· ${esc(item.price)}</span>` : ''}</div>
+    <p style="margin-top:12px">Everyone else will see this is sorted, so nobody doubles up. ${esc(item.owner)} won't see a thing.</p>
+    ${partner ? `<label class="toggle"><input type="checkbox" id="joint"> Joint present from me and ${esc(partner)}</label>` : ''}
+    <div class="row"><button class="btn ghost" data-act="close">Not yet</button><button class="btn green" id="yes">${I.gift} Yes, I'll get it</button></div>`, (m) => {
+    m.querySelector('#yes').onclick = async (e) => {
+      const r = e.currentTarget.getBoundingClientRect();
+      const joint = !!m.querySelector('#joint')?.checked;
+      e.currentTarget.disabled = true;
+      try {
+        await store.claim(item.id, { boughtBy: me, joint, boughtAt: Date.now() });
+        closeModal(); burst(r.left + r.width / 2, r.top); jingle();
+        toast(joint ? `Sorted! Joint present with ${partner}.` : 'Sorted! Ho ho ho!');
+      } catch (err) {
+        closeModal(); sadTrombone();
+        toast(err.message === 'taken' ? 'Too slow! Someone has just bought that.' : err.message === 'gone' ? 'That wish has just been removed.' : friendlyError(err), true);
+      }
+    };
+  });
+}
+
+/* ---------- drag to reorder ---------- */
+function startDrag(handle, e) {
+  const li = handle.closest('.item'), ul = li.parentElement;
+  const els = [...ul.children], from = els.indexOf(li);
+  const tops = els.map((el) => el.getBoundingClientRect().top + scrollY);
+  const heights = els.map((el) => el.offsetHeight);
+  const gap = els.length > 1 ? tops[1] - tops[0] - heights[0] : 14;
+  const step = heights[from] + gap;
+  const startY = e.clientY + scrollY;
+  let lastClientY = e.clientY, to = from, raf = 0;
+  S.dragging = true;
+  li.classList.add('dragging');
+  els.forEach((el) => { if (el !== li) el.classList.add('shift'); });
+  try { handle.setPointerCapture(e.pointerId); } catch {}
+  pop();
+
+  const update = () => {
+    const dy = lastClientY + scrollY - startY;
+    li.style.transform = `translateY(${dy}px)`;
+    const centre = tops[from] + heights[from] / 2 + dy;
+    let n = 0;
+    els.forEach((el, j) => { if (j !== from && tops[j] + heights[j] / 2 < centre) n++; });
+    if (n !== to) { to = n; pop(); }
+    els.forEach((el, j) => {
+      if (j === from) return;
+      let s = 0;
+      if (from < to && j > from && j <= to) s = -step;
+      if (from > to && j >= to && j < from) s = step;
+      el.style.transform = s ? `translateY(${s}px)` : '';
+    });
+  };
+  const edge = () => {
+    const m = 70;
+    if (lastClientY < m) scrollBy(0, -10); else if (lastClientY > innerHeight - m) scrollBy(0, 10);
+    update(); raf = requestAnimationFrame(edge);
+  };
+  raf = requestAnimationFrame(edge);
+  const move = (ev) => { lastClientY = ev.clientY; ev.preventDefault(); };
+  const end = async () => {
+    cancelAnimationFrame(raf);
+    handle.removeEventListener('pointermove', move);
+    handle.removeEventListener('pointerup', end);
+    handle.removeEventListener('pointercancel', end);
+    els.forEach((el) => { el.style.transform = ''; el.classList.remove('shift', 'dragging'); });
+    S.dragging = false;
+    if (to !== from) {
+      const ids = els.map((el) => el.dataset.id);
+      const [moved] = ids.splice(from, 1); ids.splice(to, 0, moved);
+      const changes = ids.map((id, k) => ({ id, order: (k + 1) * 1000 }));
+      changes.forEach(({ id, order }) => { const it = S.items.find((x) => x.id === id); if (it) it.order = order; });
+      render();
+      try { await store.reorder(changes); } catch (err) { toast(friendlyError(err), true); }
+    } else if (S.pending) { S.pending = false; render(); }
+    S.pending = false;
+  };
+  handle.addEventListener('pointermove', move);
+  handle.addEventListener('pointerup', end);
+  handle.addEventListener('pointercancel', end);
+}
+document.addEventListener('pointerdown', (e) => {
+  const h = e.target.closest('[data-handle]');
+  if (h && !S.dragging && (e.button === 0 || e.pointerType !== 'mouse')) { e.preventDefault(); startDrag(h, e); }
+});
+
+/* ---------- PIN logic ---------- */
+async function pinKey(k) {
+  const P = S.pin; if (!P || P.busy) return;
+  if (P.entry.length >= 4) return;
+  P.entry += k; P.err = ''; P.shake = false; pop(); render();
+  if (P.entry.length < 4) return;
+  P.busy = true;
+  await new Promise((r) => setTimeout(r, 180));
+  const who = P.who;
+  if (P.stage === 'enter') {
+    const h = pinHash(who, P.entry);
+    if (S.people[who]?.pinHash === h) return finishLogin(who, h);
+    Object.assign(P, { entry: '', err: "That's not it. Try again.", shake: true, busy: false }); sadTrombone(); render(); return;
+  }
+  if (P.stage === 'set') { Object.assign(P, { first: P.entry, entry: '', stage: 'confirm', busy: false }); render(); return; }
+  if (P.stage === 'confirm') {
+    if (P.entry !== P.first) { Object.assign(P, { entry: '', first: '', stage: 'set', err: "Those didn't match. Choose again.", shake: true, busy: false }); sadTrombone(); render(); return; }
+    const h = pinHash(who, P.entry);
+    try { await store.setPerson(who, { pinHash: h, setAt: Date.now() }); S.people[who] = { pinHash: h }; finishLogin(who, h); }
+    catch (e) { Object.assign(P, { entry: '', busy: false, err: friendlyError(e) }); render(); }
+  }
+}
+function finishLogin(who, h) {
+  setSession({ name: who, hash: h });
+  S.pin = null; S.me = who;
+  chime(); go('home');
+  const r = innerWidth / 2; burst(r, 120, 60);
+  toast(`Merry Christmas, ${who}!`);
+  if (who === 'Robert') setTimeout(() => showAlarm(true), 350);
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', async (e) => {
+  const el = e.target.closest('[data-act]');
+  if (!el) { if (e.target.id === 'modal') closeModal(); return; }
+  const act = el.dataset.act, id = el.dataset.id;
+  const item = id ? S.items.find((i) => i.id === id) : null;
+  switch (act) {
+    case 'reload': location.reload(); break;
+    case 'pick': {
+      const who = el.dataset.name; pop();
+      if (isManaged(who)) { finishLogin(who, NO_PIN); break; }
+      S.pin = { who, stage: S.people[who]?.pinHash ? 'enter' : 'set', entry: '', first: '', err: '' };
+      go('pin'); break;
+    }
+    case 'pinkey': pinKey(el.dataset.k); break;
+    case 'pindel': if (S.pin && !S.pin.busy) { S.pin.entry = S.pin.entry.slice(0, -1); render(); } break;
+    case 'pinback': S.pin = null; go('login'); break;
+    case 'logout': setSession(null); S.me = null; pop(); go('login'); break;
+    case 'music': S.music = !S.music; try { localStorage.setItem(MUSIC_KEY, S.music ? 'on' : 'off'); } catch {} if (S.music) startMusic(); else stopMusic(); render(); break;
+    case 'sound': S.sound = !S.sound; try { localStorage.setItem(SOUND_KEY, S.sound ? 'on' : 'off'); } catch {} if (S.sound) chime(); render(); break;
+    case 'nav': pop(); go(el.dataset.v); break;
+    case 'open': pop(); go('list', { listOwner: el.dataset.owner }); break;
+    case 'add': itemForm(S.listOwner); break;
+    case 'edit': if (item && canEdit(S.me, item.owner)) itemForm(item.owner, item); break;
+    case 'del': {
+      if (!item || !canEdit(S.me, item.owner)) break;
+      const warn = canSeeBought(S.me, item.owner) && item.boughtBy
+        ? ` ${esc(buyerLabel(item))} has already bought this, and they'll get a heads-up.` : '';
+      confirmBox('Remove this wish?', `<b>${esc(item.title)}</b> will come off the list.${warn}`, 'Remove', async () => {
+        if (item.boughtBy) await store.updateItem(item.id, { removed: true, removedAt: Date.now() });
+        else await store.deleteItem(item.id);
+        toast('Wish removed');
+      });
+      break;
+    }
+    case 'buy': if (item && canSeeBought(S.me, item.owner)) buyBox(item); break;
+    case 'undo':
+      if (item && isMyPurchase(item, S.me)) {
+        confirmBox('Not getting it after all?', `<b>${esc(item.title)}</b> will go back on ${esc(item.owner)}'s list for someone else to buy.`, 'Put it back', async () => {
+          await store.updateItem(item.id, { boughtBy: null, joint: false, boughtAt: null });
+          toast('Back on the list');
+        }, false);
+      }
+      break;
+    case 'dismiss': if (item && item.removed && isMyPurchase(item, S.me)) { try { await store.deleteItem(item.id); } catch (err) { toast(friendlyError(err), true); } } break;
+    case 'resetpin':
+      if (S.me === ADMIN) confirmBox('Reset PIN?', `${esc(el.dataset.name)} will choose a new PIN next time. Their list stays as it is.`, 'Reset', async () => {
+        await store.deletePerson(el.dataset.name); toast(`${el.dataset.name}'s PIN has been reset`);
+      });
+      break;
+    case 'newyear':
+      if (S.me === ADMIN) confirmBox(`Start Christmas ${S.year + 1}?`, `Everyone's lists will be empty for next year. This can't easily be undone, so only do it once all the presents are opened.`, 'Start next year', async () => {
+        await store.setMeta({ year: S.year + 1 }); toast(`Welcome to Christmas ${S.year + 1}!`);
+      });
+      break;
+    case 'close': closeModal(); break;
+  }
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && $('#modal').classList.contains('open')) closeModal();
+  if (S.view === 'pin' && !$('#modal').classList.contains('open')) {
+    if (/^[0-9]$/.test(e.key)) pinKey(e.key);
+    else if (e.key === 'Backspace' && S.pin && !S.pin.busy) { S.pin.entry = S.pin.entry.slice(0, -1); render(); }
+  }
+});
+
+/* ---------- boot ---------- */
+async function boot() {
+  buildSky(); initSnow(); render();
+  const slow = setTimeout(() => { if (!S.ready && !S.error) { S.error = 'The elves are taking a while. Check your connection.'; render(); } }, 12000);
+  try {
+    store = DEMO ? demoStore() : await firebaseStore();
+    store.init((d) => { clearTimeout(slow); onData(d); }, onError);
+  } catch (e) { onError(e); }
+}
+boot();
+</script>
+</body>
+</html>
