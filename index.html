@@ -243,7 +243,7 @@ h1,h2,.festive{font-family:"Mountains of Christmas",Georgia,serif;font-weight:70
 /* ============================================================
    The Family Christmas List
    ============================================================ */
-const VERSION = '1.2.4';
+const VERSION = '1.3.0';
 
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyBRPZgESoFpIrDzE50Jiav6hdtLWFOoWWM",
@@ -270,6 +270,7 @@ const PEOPLE = [
   { name: 'Charlie',   adult: false, managedBy: ['Gareth', 'Amy'], colour: '#ff6f61' },
   { name: 'Lily',      adult: false,                       colour: '#b15ce6' },
   { name: 'Freddy',    adult: false,                       colour: '#3fae49' },
+  { name: 'Poppy',     adult: false, pet: true,            colour: '#a0632f' },
 ];
 const TAGS = { must: 'Must have', like: 'Would like', surprise: 'Nice to have' };
 
@@ -285,8 +286,10 @@ const isKid = (n) => !byName(n)?.adult;
 const partnerOf = (n) => byName(n)?.partner || null;
 const isManaged = (n) => !!byName(n)?.managedBy;
 const NO_PIN = 'no-pin';
-const canEdit = (viewer, owner) => (viewer === owner && !isManaged(owner)) || !!byName(owner)?.managedBy?.includes(viewer);
-const canSeeBought = (viewer, owner) => viewer !== owner && !isKid(viewer);
+const isPet = (n) => !!byName(n)?.pet;
+const canEdit = (viewer, owner) => isPet(owner) || (viewer === owner && !isManaged(owner)) || !!byName(owner)?.managedBy?.includes(viewer);
+const canSeeBought = (viewer, owner) => isPet(owner) || (viewer !== owner && !isKid(viewer));
+const canBuy = (viewer, owner) => viewer !== owner && !isKid(viewer);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
@@ -397,7 +400,8 @@ function bauble(p, size = 64) {
     <rect x="24" y="10" width="16" height="9" rx="2" fill="#f2c14e"/><rect x="24" y="16" width="16" height="3" fill="#c99a2e"/>
     <circle cx="32" cy="48" r="29" fill="url(#${id})" stroke="rgba(0,0,0,.15)" stroke-width="1.5"/>
     <path d="M5 44 Q32 54 59 44" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="3" stroke-dasharray="1 6" stroke-linecap="round"/>
-    <text x="32" y="58" text-anchor="middle" font-family="Mountains of Christmas,Georgia,serif" font-weight="700" font-size="30" fill="#fff" stroke="rgba(0,0,0,.25)" stroke-width="1">${esc(p.name[0])}</text>
+    <text x="32" y="58" text-anchor="middle" font-family="Mountains of Christmas,Georgia,serif" font-weight="700" font-size="30" fill="#fff" stroke="rgba(0,0,0,.25)" stroke-width="1">${p.pet ? '' : esc(p.name[0])}</text>
+    ${p.pet ? '<g fill="#fff" stroke="rgba(0,0,0,.2)" stroke-width="1"><ellipse cx="32" cy="54" rx="9" ry="7.5"/><ellipse cx="21" cy="43" rx="4" ry="5"/><ellipse cx="28" cy="37" rx="4" ry="5"/><ellipse cx="36" cy="37" rx="4" ry="5"/><ellipse cx="43" cy="43" rx="4" ry="5"/></g>' : ''}
   </svg>`;
 }
 function lights() {
@@ -815,7 +819,7 @@ function personButton(p) {
 }
 function viewLogin() {
   const adults = PEOPLE.filter((p) => p.adult);
-  const kids = PEOPLE.filter((p) => !p.adult);
+  const kids = PEOPLE.filter((p) => !p.adult && !p.pet);
   return `${lights()}<div class="corner">${audioButtons()}</div>
     <h1 class="title">The Family<br>Christmas List</h1>
     <p class="countdown">${countdownHTML()}</p>
@@ -908,7 +912,7 @@ function itemCard(i, idx, ctx) {
   const href = i.link ? safeHref(i.link) : null;
   const acts = [];
   if (href) acts.push(`<a class="btn small ghost" href="${esc(href)}" target="_blank" rel="noopener noreferrer">${I.link} ${esc(domainOf(href))}</a>`);
-  if (ctx.see && !i.boughtBy) acts.push(`<button class="btn small green" data-act="buy" data-id="${esc(i.id)}">${I.gift} I'll get this</button>`);
+  if (ctx.buy && !i.boughtBy) acts.push(`<button class="btn small green" data-act="buy" data-id="${esc(i.id)}">${I.gift} I'll get this</button>`);
   if (mineBuy) acts.push(`<button class="btn small ghost" data-act="undo" data-id="${esc(i.id)}">Undo</button>`);
   if (ctx.edit) {
     acts.push('<span class="spacer"></span>');
@@ -932,12 +936,13 @@ function itemCard(i, idx, ctx) {
 function viewList() {
   const owner = S.listOwner, p = byName(owner), me = S.me;
   if (!p) return viewHome();
-  const ctx = { edit: canEdit(me, owner), see: canSeeBought(me, owner) };
+  const ctx = { edit: canEdit(me, owner), see: canSeeBought(me, owner), buy: canBuy(me, owner) };
   const items = itemsFor(owner);
   ctx.drag = ctx.edit && items.length > 1;
   const title = owner === me ? 'My wishlist' : `${owner}'s wishlist`;
   let help = '';
-  if (owner === me && isManaged(me)) help = `<div class="shh">${I.star}<span>${esc(byName(me).managedBy.join(' and '))} look after your list. Tell them if you think of something new!</span></div>`;
+  if (isPet(owner)) help = `<div class="shh">${I.gift}<span>${esc(owner)} can't type, so everyone can add wishes and drag them into order${ctx.buy ? '. Tap "I\'ll get this" to claim a present' : ''}. Everyone can see what's been bought for her.</span></div>`;
+  else if (owner === me && isManaged(me)) help = `<div class="shh">${I.star}<span>${esc(byName(me).managedBy.join(' and '))} look after your list. Tell them if you think of something new!</span></div>`;
   else if (owner === me) help = `<div class="shh">${I.shh}<span>No peeking! You'll never see what's been bought from your own list. ${items.length > 1 ? 'Drag the handles to put your favourites at the top.' : ''}</span></div>`;
   else if (ctx.edit) help = `<div class="shh">${I.star}<span>You look after ${esc(owner)}'s list. Add wishes and drag them into order${ctx.see ? ', and you can still see what has been bought' : ''}.</span></div>`;
   else if (ctx.see) help = `<div class="shh">${I.gift}<span>Tap "I'll get this" to claim a present. Everyone else will see it's sorted, but ${esc(owner)} won't.</span></div>`;
@@ -970,7 +975,7 @@ function viewShopping() {
 }
 
 function viewAdmin() {
-  const rows = PEOPLE.filter((p) => !p.managedBy).map((p) => `<div class="arow">${bauble(p, 26)}<b>${esc(p.name)}</b>
+  const rows = PEOPLE.filter((p) => !p.managedBy && !p.pet).map((p) => `<div class="arow">${bauble(p, 26)}<b>${esc(p.name)}</b>
       ${S.people[p.name]?.pinHash ? `<button class="btn small ghost" data-act="resetpin" data-name="${esc(p.name)}">Reset PIN</button>` : '<span class="pill">No PIN yet</span>'}</div>`).join('');
   return `${topbar('admin')}<h2 class="sub">North Pole control</h2>
     <div class="group"><h3>PINs</h3><p class="hint" style="text-align:left;color:var(--muted)">Resetting a PIN keeps their list. They choose a new PIN next time they visit.</p>${rows}</div>
@@ -1195,7 +1200,7 @@ document.addEventListener('click', async (e) => {
       });
       break;
     }
-    case 'buy': if (item && canSeeBought(S.me, item.owner)) buyBox(item); break;
+    case 'buy': if (item && canBuy(S.me, item.owner)) buyBox(item); break;
     case 'undo':
       if (item && isMyPurchase(item, S.me)) {
         confirmBox('Not getting it after all?', `<b>${esc(item.title)}</b> will go back on ${esc(item.owner)}'s list for someone else to buy.`, 'Put it back', async () => {
