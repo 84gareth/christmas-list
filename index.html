@@ -243,7 +243,7 @@ h1,h2,.festive{font-family:"Mountains of Christmas",Georgia,serif;font-weight:70
 /* ============================================================
    The Family Christmas List
    ============================================================ */
-const VERSION = '1.2.3';
+const VERSION = '1.2.4';
 
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyBRPZgESoFpIrDzE50Jiav6hdtLWFOoWWM",
@@ -649,30 +649,72 @@ async function firebaseStore() {
   ]);
   const app = appMod.initializeApp(FIREBASE_CONFIG, 'family-xmas-list');
   const auth = authMod.getAuth(app);
-  await authMod.signInAnonymously(auth);
+  /* keep the silent sign-in alive: phones can drop it while the page sits in the background */
+  let signing = null;
+  const ensureAuth = async (force = false) => {
+    if (signing) return signing;
+    signing = (async () => {
+      try {
+        if (auth.currentUser) { await auth.currentUser.getIdToken(force); return; }
+      } catch {}
+      await authMod.signInAnonymously(auth);
+    })().finally(() => { signing = null; });
+    return signing;
+  };
+  await ensureAuth();
+  authMod.onAuthStateChanged(auth, (u) => { if (!u) ensureAuth().catch(() => {}); });
+  const isAuthErr = (e) => /permission|unauthenticated|auth/i.test(e?.code || e?.message || '');
+  const retry = async (fn) => {
+    try { return await fn(); }
+    catch (e) {
+      if (!isAuthErr(e) || e?.message === 'gone' || e?.message === 'taken') throw e;
+      await ensureAuth(true);
+      return fn();
+    }
+  };
   const db = fs.getFirestore(app);
   const { collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, setDoc, writeBatch, runTransaction } = fs;
   return {
     init(onData, onError) {
       const cache = { people: {}, items: [], meta: null }, got = new Set();
       const emit = () => { if (got.size === 3) onData({ ...cache }); };
-      onSnapshot(collection(db, 'xmasPeople'), (s) => { cache.people = {}; s.forEach((d) => { cache.people[d.id] = d.data(); }); got.add('p'); emit(); }, onError);
-      onSnapshot(collection(db, 'xmasItems'), (s) => { cache.items = s.docs.map((d) => ({ id: d.id, ...d.data() })); got.add('i'); emit(); }, onError);
-      onSnapshot(doc(db, 'xmasMeta', 'settings'), (s) => { cache.meta = s.exists() ? s.data() : null; got.add('m'); emit(); }, onError);
+      let unsubs = [], fails = 0, restarting = false;
+      const restart = async (e) => {
+        if (restarting) return;
+        restarting = true;
+        unsubs.forEach((u) => { try { u(); } catch {} }); unsubs = [];
+        fails++;
+        if (fails > 4) { restarting = false; onError(e); return; }
+        try { await ensureAuth(true); } catch {}
+        setTimeout(() => { restarting = false; subscribe(); }, Math.min(8000, 500 * 2 ** (fails - 1)));
+      };
+      const ok = () => { fails = 0; };
+      const subscribe = () => {
+        unsubs = [
+          onSnapshot(collection(db, 'xmasPeople'), (s) => { ok(); cache.people = {}; s.forEach((d) => { cache.people[d.id] = d.data(); }); got.add('p'); emit(); }, restart),
+          onSnapshot(collection(db, 'xmasItems'), (s) => { ok(); cache.items = s.docs.map((d) => ({ id: d.id, ...d.data() })); got.add('i'); emit(); }, restart),
+          onSnapshot(doc(db, 'xmasMeta', 'settings'), (s) => { ok(); cache.meta = s.exists() ? s.data() : null; got.add('m'); emit(); }, restart),
+        ];
+      };
+      subscribe();
+      /* when the phone wakes the page up, refresh the sign-in before anyone taps anything */
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') ensureAuth(true).catch(() => {});
+      });
     },
-    addItem: (data) => addDoc(collection(db, 'xmasItems'), data),
-    updateItem: (id, p) => updateDoc(doc(db, 'xmasItems', id), p),
-    deleteItem: (id) => deleteDoc(doc(db, 'xmasItems', id)),
-    reorder: async (list) => { const b = writeBatch(db); list.forEach(({ id, order }) => b.update(doc(db, 'xmasItems', id), { order })); await b.commit(); },
-    setPerson: (n, d) => setDoc(doc(db, 'xmasPeople', n), d),
-    deletePerson: (n) => deleteDoc(doc(db, 'xmasPeople', n)),
-    setMeta: (p) => setDoc(doc(db, 'xmasMeta', 'settings'), p, { merge: true }),
-    claim: (id, patch) => runTransaction(db, async (t) => {
+    addItem: (data) => retry(() => addDoc(collection(db, 'xmasItems'), data)),
+    updateItem: (id, p) => retry(() => updateDoc(doc(db, 'xmasItems', id), p)),
+    deleteItem: (id) => retry(() => deleteDoc(doc(db, 'xmasItems', id))),
+    reorder: (list) => retry(async () => { const b = writeBatch(db); list.forEach(({ id, order }) => b.update(doc(db, 'xmasItems', id), { order })); await b.commit(); }),
+    setPerson: (n, d) => retry(() => setDoc(doc(db, 'xmasPeople', n), d)),
+    deletePerson: (n) => retry(() => deleteDoc(doc(db, 'xmasPeople', n))),
+    setMeta: (p) => retry(() => setDoc(doc(db, 'xmasMeta', 'settings'), p, { merge: true })),
+    claim: (id, patch) => retry(() => runTransaction(db, async (t) => {
       const r = doc(db, 'xmasItems', id), s = await t.get(r);
       if (!s.exists() || s.data().removed) throw new Error('gone');
       if (s.data().boughtBy) throw new Error('taken');
       t.update(r, patch);
-    }),
+    })),
   };
 }
 
@@ -707,7 +749,7 @@ function demoStore() {
 
 function friendlyError(e) {
   const code = e?.code || e?.message || String(e);
-  if (/permission/i.test(code)) return `The North Pole said no (permission denied). Check the Firestore rules are published. [${code}]`;
+  if (/permission|unauthenticated/i.test(code)) return `Lost touch with the North Pole. Pull down to refresh the page and try again. [${code}]`;
   if (/operation-not-allowed|admin-restricted/i.test(code)) return `Anonymous sign-in isn't switched on in Firebase Authentication. [${code}]`;
   if (/unauthorized-domain/i.test(code)) return `This web address isn't on Firebase's authorised domains list. [${code}]`;
   return `Couldn't reach the North Pole. Check your connection and try again. [${code}]`;
