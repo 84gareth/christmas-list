@@ -217,7 +217,32 @@ h1,h2,.festive{font-family:"Mountains of Christmas",Georgia,serif;font-weight:70
 .srow{display:flex;gap:10px;align-items:center;padding:8px 0;border-top:1px dashed #e2d3b6}
 .srow:first-of-type{border-top:0}
 .srow .ib b{display:block}
+.srow .ib{flex:1;min-width:0}
+.srow .ib b{word-wrap:break-word}
 .srow .ib small{color:var(--muted);font-weight:700}
+.srow.done .ib b{text-decoration:line-through;color:var(--muted)}
+.tick{flex:none;width:36px;height:36px;border-radius:50%;border:3px solid #cdb994;background:#fff;display:grid;place-items:center;color:transparent;transition:background .15s,transform .15s}
+.tick svg{width:18px;height:18px}
+.tick.on{background:var(--green);border-color:var(--green-d);color:#fff}
+.tick:active{transform:scale(.9)}
+.cost{flex:none;font-weight:900;padding:6px 10px;border-radius:999px;background:var(--paper2);color:var(--green-d);font-size:14px}
+.cost.none{color:var(--muted);font-weight:800;font-size:13px}
+.group h3 .gtot{margin-left:auto;font-family:Nunito,system-ui,sans-serif;font-size:14px;font-weight:900;color:var(--green-d);text-align:right;line-height:1.2}
+.group h3 .gtot small{display:block;color:var(--muted);font-weight:800;font-size:12px}
+.tagx{display:inline-block;background:#fff3d6;color:#8a6516;border-radius:999px;padding:1px 8px;font-size:11px;font-weight:900;margin-right:4px}
+.addx{margin-top:6px;width:100%;padding:10px;border-radius:12px;border:2px dashed #dccbaa;font-weight:900;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:6px}
+.addx svg{width:16px;height:16px}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:var(--paper);color:var(--ink);border-radius:var(--radius);padding:14px 8px;box-shadow:var(--shadow);text-align:center;margin-top:12px}
+.summary b{display:block;font-size:24px;font-weight:900;line-height:1.1;color:var(--green-d)}
+.summary div:nth-child(2) b{color:var(--red)}
+.summary div:nth-child(3) b{color:var(--ink)}
+.summary small{font-weight:800;color:var(--muted);font-size:12px}
+.pickgrid{display:flex;flex-wrap:wrap;gap:6px}
+.pickgrid label{position:relative}
+.pickgrid input{position:absolute;opacity:0}
+.pickgrid label div{padding:7px 12px;border-radius:999px;background:var(--paper2);font-weight:900;font-size:14px;border:2px solid transparent}
+.pickgrid input:checked+div{background:var(--green);color:#fff;border-color:var(--green-d)}
+.pickgrid input:focus-visible+div{outline:3px solid var(--night2)}
 .arow{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px dashed #e2d3b6}
 .arow:first-child{border-top:0}
 .arow b{flex:1}
@@ -243,7 +268,7 @@ h1,h2,.festive{font-family:"Mountains of Christmas",Georgia,serif;font-weight:70
 /* ============================================================
    The Family Christmas List
    ============================================================ */
-const VERSION = '1.3.0';
+const VERSION = '1.4.0';
 
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyBRPZgESoFpIrDzE50Jiav6hdtLWFOoWWM",
@@ -293,7 +318,11 @@ const canBuy = (viewer, owner) => viewer !== owner && !isKid(viewer);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
-const isMyPurchase = (i, me) => !!i.boughtBy && i.owner !== me && (i.boughtBy === me || (i.joint && partnerOf(i.boughtBy) === me));
+const recipientOf = (i) => (i.extra ? i.for : i.owner);
+const parsePrice = (v) => { const m = String(v || '').replace(/,/g, '').match(/\d+(?:\.\d+)?/); return m ? +m[0] : null; };
+const costOf = (i) => (typeof i.paid === 'number' ? i.paid : parsePrice(i.price));
+const money = (n) => '£' + (Math.round(n * 100) % 100 ? n.toFixed(2) : n.toFixed(0));
+const isMyPurchase = (i, me) => !!i.boughtBy && i.owner !== me && recipientOf(i) !== me && (i.boughtBy === me || (i.joint && partnerOf(i.boughtBy) === me));
 const buyerLabel = (i) => (i.joint && partnerOf(i.boughtBy) ? `${i.boughtBy} & ${partnerOf(i.boughtBy)}` : i.boughtBy);
 
 function normaliseLink(raw) {
@@ -381,6 +410,7 @@ const I = {
   bin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg>',
   link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 6 0l3-3a4 4 0 0 0-6-6l-1 1"/><path d="M14 10a4 4 0 0 0-6 0l-3 3a4 4 0 0 0 6 6l1-1"/></svg>',
   gift: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="5" rx="1"/><path d="M5 13v8h14v-8M12 8v13"/><path d="M12 8C10 4 6 4 7 7c.5 1 3 1 5 1zM12 8c2-4 6-4 5-1-.5 1-3 1-5 1z"/></svg>',
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
   plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
   bell: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a1.5 1.5 0 0 1 1.5 1.5v.6A6.5 6.5 0 0 1 18.5 10.5v4l2 3H3.5l2-3v-4A6.5 6.5 0 0 1 10.5 4.1v-.6A1.5 1.5 0 0 1 12 2z"/><circle cx="12" cy="20" r="2"/></svg>',
   list: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2" fill="currentColor"/><circle cx="4.5" cy="12" r="1.2" fill="currentColor"/><circle cx="4.5" cy="18" r="1.2" fill="currentColor"/></svg>',
@@ -639,7 +669,7 @@ const S = {
 let store = null;
 
 function itemsFor(owner) {
-  return S.items.filter((i) => i.owner === owner && i.year === S.year && !i.removed)
+  return S.items.filter((i) => i.owner === owner && i.year === S.year && !i.removed && !i.extra)
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || (a.createdAt ?? 0) - (b.createdAt ?? 0));
 }
 function getSession() { try { return JSON.parse(localStorage.getItem(SESSION_KEY)); } catch { return null; } }
@@ -959,19 +989,105 @@ function viewList() {
 }
 
 function viewShopping() {
-  const me = S.me;
-  const mine = S.items.filter((i) => i.year === S.year && !i.removed && isMyPurchase(i, me));
-  const groups = PEOPLE.map((p) => [p, mine.filter((i) => i.owner === p.name)]).filter(([, l]) => l.length);
-  const body = groups.length
-    ? groups.map(([p, l]) => `<div class="group"><h3>${bauble(p, 30)} For ${esc(p.name)}</h3>
-        ${l.map((i) => { const href = i.link ? safeHref(i.link) : null; return `<div class="srow"><div class="ib"><b>${esc(i.title)}</b>
-          <small>${[i.price, i.joint ? `Joint with ${esc(i.boughtBy === me ? partnerOf(me) : i.boughtBy)}` : ''].filter(Boolean).map(esc).join(' · ')}</small></div>
-          ${href ? `<a class="mini" href="${esc(href)}" target="_blank" rel="noopener noreferrer" aria-label="Open link">${I.link}</a>` : ''}
-          <button class="btn small ghost" data-act="undo" data-id="${esc(i.id)}">Undo</button></div>`; }).join('')}</div>`).join('')
-    : `<div class="empty">${snowmanSVG}<p class="festive" style="font-size:26px;margin:6px 0">Nothing yet</p><p>Presents you claim on other people's lists will appear here.</p></div>`;
+  const me = S.me, partner = partnerOf(me);
+  const mine = S.items.filter((i) => i.year === S.year && !i.removed && isMyPurchase(i, me))
+    .sort((a, b) => (a.purchased ? 1 : 0) - (b.purchased ? 1 : 0) || (a.boughtAt || a.createdAt || 0) - (b.boughtAt || b.createdAt || 0));
+  const sum = (l) => l.reduce((t, i) => t + (costOf(i) || 0), 0);
+  const done = mine.filter((i) => i.purchased);
+  const unpriced = mine.filter((i) => costOf(i) == null).length;
+  const groups = PEOPLE.filter((p) => p.name !== me).map((p) => [p, mine.filter((i) => recipientOf(i) === p.name)]).filter(([, l]) => l.length);
+  const row = (i) => {
+    const href = i.link ? safeHref(i.link) : null, c = costOf(i);
+    const joint = i.joint ? `Joint with ${esc(i.boughtBy === me ? partner : i.boughtBy)}` : '';
+    const tags = `${i.extra ? '<span class="tagx">Not on their list</span>' : ''}${joint}`;
+    return `<div class="srow ${i.purchased ? 'done' : ''}" data-id="${esc(i.id)}">
+      <button class="tick ${i.purchased ? 'on' : ''}" data-act="purchased" data-id="${esc(i.id)}" aria-pressed="${i.purchased ? 'true' : 'false'}" aria-label="${i.purchased ? 'Bought' : 'Mark as bought'}">${I.check}</button>
+      <div class="ib"><b>${esc(i.title)}</b>${tags ? `<small>${tags}</small>` : ''}</div>
+      <button class="cost ${c == null ? 'none' : ''}" data-act="cost" data-id="${esc(i.id)}">${c == null ? 'Add cost' : money(c)}</button>
+      ${href ? `<a class="mini" href="${esc(href)}" target="_blank" rel="noopener noreferrer" aria-label="Open link">${I.link}</a>` : ''}
+      <button class="mini danger" data-act="${i.extra ? 'delextra' : 'undo'}" data-id="${esc(i.id)}" aria-label="${i.extra ? 'Remove' : 'Not getting it'}">${I.bin}</button>
+    </div>`;
+  };
+  const body = groups.map(([p, l]) => {
+    const spent = sum(l.filter((i) => i.purchased)), all = sum(l);
+    return `<div class="group"><h3>${bauble(p, 30)} For ${esc(p.name)}
+      <span class="gtot">${money(spent)} spent${all > spent ? `<small>of ${money(all)}</small>` : ''}</span></h3>
+      ${l.map(row).join('')}
+      <button class="addx" data-act="addextra" data-for="${esc(p.name)}">${I.plus} Add something else for ${esc(p.name)}</button></div>`;
+  }).join('');
+  const summary = mine.length ? `<div class="summary">
+      <div><b>${money(sum(done))}</b><small>spent so far</small></div>
+      <div><b>${money(sum(mine) - sum(done))}</b><small>still to buy</small></div>
+      <div><b>${done.length}/${mine.length}</b><small>bought</small></div></div>
+    <p class="hint" style="text-align:left;margin-top:10px">Tick a present once you've actually bought it. Tap a price to change it to what you paid.${unpriced ? ` ${plural(unpriced, 'present has', 'presents have')} no cost yet.` : ''}${partner ? ` Joint presents with ${esc(partner)} count in full in both your totals.` : ''}</p>`
+    : `<div class="empty">${snowmanSVG}<p class="festive" style="font-size:26px;margin:6px 0">Nothing yet</p><p>Presents you claim on other people's lists will appear here, or add one below.</p></div>`;
   return `${topbar('shopping')}<h2 class="sub">My shopping</h2>
-    <p class="hint" style="text-align:left">${plural(mine.length, 'present', 'presents')} claimed${partnerOf(me) ? `, including joint ones with ${esc(partnerOf(me))}` : ''}.</p>
-    ${body}${footer()}`;
+    ${summary}${body}
+    <button class="btn block gold" data-act="addextra">${I.plus} Add a present that's not on a list</button>
+    ${footer()}`;
+}
+
+function costBox(item) {
+  const c = costOf(item);
+  openModal(`<h2>What did it cost?</h2>
+    <div class="big-item">${esc(item.title)}</div>
+    <form id="f" novalidate>
+      <label class="field"><span>Cost in pounds</span><input name="cost" inputmode="decimal" maxlength="10" value="${c == null ? '' : esc(String(c))}" placeholder="e.g. 24.99" autocomplete="off"></label>
+      ${item.price && !item.extra ? `<p style="color:var(--muted);font-weight:700;font-size:14px">The list said ${esc(item.price)}. Leave it blank to use that.</p>` : ''}
+      <div class="ferr" id="ferr"></div>
+      <div class="row"><button type="button" class="btn ghost" data-act="close">Cancel</button><button class="btn green" type="submit">Save</button></div>
+    </form>`, (m) => {
+    const f = m.querySelector('#f'), F = f.elements;
+    F.cost.focus(); F.cost.select();
+    f.onsubmit = async (e) => {
+      e.preventDefault();
+      const raw = F.cost.value.trim();
+      const v = raw === '' ? null : parsePrice(raw);
+      if (raw !== '' && (v == null || v > 100000)) { m.querySelector('#ferr').textContent = 'Type a number, like 24.99'; return; }
+      try { await store.updateItem(item.id, { paid: v }); closeModal(); toast('Cost saved'); }
+      catch (err) { m.querySelector('#ferr').textContent = friendlyError(err); }
+    };
+  });
+}
+
+function extraForm(forWho) {
+  const me = S.me, partner = partnerOf(me);
+  const options = PEOPLE.filter((p) => p.name !== me);
+  openModal(`<h2>Add a present</h2>
+    <p style="color:var(--muted);font-weight:700">For something that isn't on anyone's list. Only you${partner ? ` (and ${esc(partner)}, if it's joint)` : ''} will see it.</p>
+    <form id="f" novalidate>
+      <div class="field"><span>Who is it for?</span><div class="pickgrid">
+        ${options.map((p) => `<label><input type="radio" name="who" value="${esc(p.name)}" ${p.name === forWho ? 'checked' : ''}><div>${esc(p.name)}</div></label>`).join('')}
+      </div></div>
+      <label class="field"><span>What is it?</span><input name="wtitle" maxlength="80" placeholder="e.g. Chocolate selection box" autocomplete="off"></label>
+      <label class="field"><span>Cost in pounds</span><input name="cost" inputmode="decimal" maxlength="10" placeholder="e.g. 12.50" autocomplete="off"></label>
+      <label class="toggle"><input type="checkbox" name="done" checked> Already bought</label>
+      ${partner ? `<label class="toggle" id="jointrow"><input type="checkbox" name="joint"> Joint present from me and ${esc(partner)}</label>` : ''}
+      <div class="ferr" id="ferr"></div>
+      <div class="row"><button type="button" class="btn ghost" data-act="close">Cancel</button><button class="btn green" type="submit">Add</button></div>
+    </form>`, (m) => {
+    const f = m.querySelector('#f'), F = f.elements;
+    const syncJoint = () => { const jr = m.querySelector('#jointrow'); if (jr) jr.style.display = F.who.value === partner ? 'none' : ''; };
+    f.addEventListener('change', syncJoint); syncJoint();
+    if (forWho) F.wtitle.focus();
+    f.onsubmit = async (e) => {
+      e.preventDefault();
+      const who = F.who.value, title = F.wtitle.value.trim(), raw = F.cost.value.trim();
+      const cost = raw === '' ? null : parsePrice(raw);
+      const err = (t) => { m.querySelector('#ferr').textContent = t; };
+      if (!who) return err('Choose who it is for.');
+      if (!title) return err('Give the present a name.');
+      if (raw !== '' && (cost == null || cost > 100000)) return err('Type the cost as a number, like 12.50');
+      const joint = !!F.joint?.checked && who !== partner;
+      f.querySelector('[type=submit]').disabled = true;
+      try {
+        const now = Date.now();
+        await store.addItem({ extra: true, owner: '~extra', for: who, title, paid: cost, price: '', link: '', notes: '', tag: 'like', year: S.year, order: 0,
+          boughtBy: me, joint, boughtAt: now, purchased: !!F.done.checked, createdAt: now, createdBy: me, removed: false });
+        closeModal(); sparkle(); toast(`Added to your shopping for ${who}`);
+      } catch (e2) { f.querySelector('[type=submit]').disabled = false; err(friendlyError(e2)); }
+    };
+  });
 }
 
 function viewAdmin() {
@@ -1204,9 +1320,28 @@ document.addEventListener('click', async (e) => {
     case 'undo':
       if (item && isMyPurchase(item, S.me)) {
         confirmBox('Not getting it after all?', `<b>${esc(item.title)}</b> will go back on ${esc(item.owner)}'s list for someone else to buy.`, 'Put it back', async () => {
-          await store.updateItem(item.id, { boughtBy: null, joint: false, boughtAt: null });
+          await store.updateItem(item.id, { boughtBy: null, joint: false, boughtAt: null, purchased: false, paid: null });
           toast('Back on the list');
         }, false);
+      }
+      break;
+    case 'purchased':
+      if (item && isMyPurchase(item, S.me)) {
+        const on = !item.purchased, r = el.getBoundingClientRect();
+        try {
+          await store.updateItem(item.id, { purchased: on, purchasedAt: on ? Date.now() : null });
+          if (on) { burst(r.left + r.width / 2, r.top + r.height / 2, 40); sparkle(); if (costOf(item) == null) costBox(item); }
+          else pop();
+        } catch (err) { toast(friendlyError(err), true); }
+      }
+      break;
+    case 'cost': if (item && isMyPurchase(item, S.me)) costBox(item); break;
+    case 'addextra': if (byName(S.me)?.adult) extraForm(el.dataset.for || ''); break;
+    case 'delextra':
+      if (item && item.extra && isMyPurchase(item, S.me)) {
+        confirmBox('Remove this present?', `<b>${esc(item.title)}</b> will come off your shopping.`, 'Remove', async () => {
+          await store.deleteItem(item.id); toast('Removed');
+        });
       }
       break;
     case 'dismiss': if (item && item.removed && isMyPurchase(item, S.me)) { try { await store.deleteItem(item.id); } catch (err) { toast(friendlyError(err), true); } } break;
