@@ -268,7 +268,7 @@ h1,h2,.festive{font-family:"Mountains of Christmas",Georgia,serif;font-weight:70
 /* ============================================================
    The Family Christmas List
    ============================================================ */
-const VERSION = '1.4.1';
+const VERSION = '1.4.2';
 
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyBRPZgESoFpIrDzE50Jiav6hdtLWFOoWWM",
@@ -669,9 +669,8 @@ const S = {
 };
 let store = null;
 
-function itemsFor(owner, viewer = owner) {
-  const keepRemoved = viewer !== owner && canSeeBought(viewer, owner);
-  return S.items.filter((i) => i.owner === owner && i.year === S.year && !i.extra && (!i.removed || (keepRemoved && i.boughtBy)))
+function itemsFor(owner) {
+  return S.items.filter((i) => i.owner === owner && i.year === S.year && !i.extra && !i.removed)
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || (a.createdAt ?? 0) - (b.createdAt ?? 0));
 }
 function getSession() { try { return JSON.parse(localStorage.getItem(SESSION_KEY)); } catch { return null; } }
@@ -909,7 +908,7 @@ function topbar(active) {
 }
 
 function listCard(p) {
-  const items = itemsFor(p.name, S.me);
+  const items = itemsFor(p.name);
   const see = canSeeBought(S.me, p.name);
   const sorted = items.filter((i) => i.boughtBy).length;
   const pill = see && items.length
@@ -925,7 +924,7 @@ function viewHome() {
   const others = PEOPLE.filter((p) => p.name !== me && !looked.includes(p));
   const notices = byName(me).adult
     ? S.items.filter((i) => i.removed && i.year === S.year && isMyPurchase(i, me) && !i['ack_' + me]).map((i) => `<div class="notice">${I.bell}
-        <div><b>${esc(i.owner)}</b> took <b>"${esc(i.title)}"</b> off their list, after ${esc(buyerLabel(i))} had bought it. It's staying on your shopping, and everyone else still sees it as sorted.</div>
+        <div><b>${esc(i.owner)}</b> took <b>"${esc(i.title)}"</b> off their list, after ${esc(buyerLabel(i))} had bought it. It's staying on your shopping as bought.</div>
         <button class="btn small gold" data-act="dismiss" data-id="${esc(i.id)}">Got it</button></div>`).join('')
     : '';
   return `${topbar('home')}${notices}
@@ -959,7 +958,6 @@ function itemCard(i, idx, ctx) {
       <div class="imeta"><span class="chip ${esc(i.tag || 'like')}">${esc(TAGS[i.tag] || TAGS.like)}</span>${i.price ? `<span class="price">${esc(i.price)}</span>` : ''}</div>
       ${i.notes ? `<div class="notes">${esc(i.notes)}</div>` : ''}
       ${bought ? `<div class="boughtby">${I.gift} ${mineBuy ? (i.joint ? `You're getting this (joint with ${esc(i.boughtBy === me ? partnerOf(me) : i.boughtBy)})` : "You're getting this") : `Bought by ${esc(buyerLabel(i))}`}</div>` : ''}
-      ${i.removed ? `<div class="notes"><b>${esc(i.owner)} took this off the list after it was bought.</b> It still counts as sorted.</div>` : ''}
       ${acts.length ? `<div class="iactions">${acts.join('')}</div>` : ''}
     </div>
     ${bought ? '<span class="stamp">Bought</span>' : ''}
@@ -970,7 +968,7 @@ function viewList() {
   const owner = S.listOwner, p = byName(owner), me = S.me;
   if (!p) return viewHome();
   const ctx = { edit: canEdit(me, owner), see: canSeeBought(me, owner), buy: canBuy(me, owner) };
-  const items = itemsFor(owner, me);
+  const items = itemsFor(owner);
   ctx.drag = ctx.edit && items.length > 1;
   const title = owner === me ? 'My wishlist' : `${owner}'s wishlist`;
   let help = '';
@@ -1311,7 +1309,7 @@ document.addEventListener('click', async (e) => {
     case 'del': {
       if (!item || !canEdit(S.me, item.owner)) break;
       const warn = canSeeBought(S.me, item.owner) && item.boughtBy
-        ? ` ${esc(buyerLabel(item))} has already bought this. It will stay on their shopping and still show as sorted to everyone else.` : '';
+        ? ` ${esc(buyerLabel(item))} has already bought this. It will stay on their shopping.` : '';
       confirmBox('Remove this wish?', `<b>${esc(item.title)}</b> will come off the list.${warn}`, 'Remove', async () => {
         if (item.boughtBy) await store.updateItem(item.id, { removed: true, removedAt: Date.now() });
         else await store.deleteItem(item.id);
