@@ -268,7 +268,7 @@ h1,h2,.festive{font-family:"Mountains of Christmas",Georgia,serif;font-weight:70
 /* ============================================================
    The Family Christmas List
    ============================================================ */
-const VERSION = '1.4.0';
+const VERSION = '1.4.1';
 
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyBRPZgESoFpIrDzE50Jiav6hdtLWFOoWWM",
@@ -410,6 +410,7 @@ const I = {
   bin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></svg>',
   link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 6 0l3-3a4 4 0 0 0-6-6l-1 1"/><path d="M14 10a4 4 0 0 0-6 0l-3 3a4 4 0 0 0 6 6l1-1"/></svg>',
   gift: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="5" rx="1"/><path d="M5 13v8h14v-8M12 8v13"/><path d="M12 8C10 4 6 4 7 7c.5 1 3 1 5 1zM12 8c2-4 6-4 5-1-.5 1-3 1-5 1z"/></svg>',
+  undo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>',
   check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
   plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
   bell: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a1.5 1.5 0 0 1 1.5 1.5v.6A6.5 6.5 0 0 1 18.5 10.5v4l2 3H3.5l2-3v-4A6.5 6.5 0 0 1 10.5 4.1v-.6A1.5 1.5 0 0 1 12 2z"/><circle cx="12" cy="20" r="2"/></svg>',
@@ -456,7 +457,7 @@ function buildSky() {
     s.style.animationDelay = Math.random() * 3 + 's';
     sky.appendChild(s);
   }
-  sky.insertAdjacentHTML('beforeend', `<svg class="sleigh" viewBox="0 0 190 60" fill="#ffe9a8" aria-hidden="true">
+  sky.insertAdjacentHTML('beforeend', `<svg class="sleigh" viewBox="0 0 190 60" fill="#ffe9a8" aria-hidden="true"><g transform="translate(190 0) scale(-1 1)">
     <g><ellipse cx="22" cy="30" rx="13" ry="6"/><circle cx="36" cy="24" r="4.5"/><path d="M36 20l-2-10M36 20l3-9M34 13l-4-2M38 14l4-3" stroke="#ffe9a8" stroke-width="1.6" fill="none"/>
       <path d="M13 34l-4 9M18 35l-1 9M27 35l2 9M31 34l5 8" stroke="#ffe9a8" stroke-width="2" fill="none"/></g>
     <g transform="translate(46 4)"><ellipse cx="22" cy="30" rx="13" ry="6"/><circle cx="36" cy="24" r="4.5"/><path d="M36 20l-2-10M36 20l3-9M34 13l-4-2M38 14l4-3" stroke="#ffe9a8" stroke-width="1.6" fill="none"/>
@@ -465,7 +466,7 @@ function buildSky() {
     <path d="M118 30h50q8 0 8-10v-6l-10 4h-34q-10 0-14 12z"/><path d="M114 44h62q8 0 10-6" stroke="#ffe9a8" stroke-width="3" fill="none" stroke-linecap="round"/>
     <path d="M124 34v10M168 34v10" stroke="#ffe9a8" stroke-width="2"/>
     <circle cx="150" cy="8" r="7"/><path d="M143 16h14l2 12h-18z"/><path d="M146 2l10-2 2 5z" fill="#ff4d5a"/>
-    <rect x="158" y="10" width="12" height="10" rx="2"/></svg>`);
+    <rect x="158" y="10" width="12" height="10" rx="2"/></g></svg>`);
   const trees = (xs) => xs.map(([x, s]) => `<path d="M${x} ${70 - 52 * s}l${14 * s} ${20 * s}h${-6 * s}l${12 * s} ${16 * s}h${-7 * s}l${12 * s} ${16 * s}H${x - 26 * s}l${12 * s} ${-16 * s}h${-7 * s}l${12 * s} ${-16 * s}h${-6 * s}z" fill="#0f3b2a"/>`).join('');
   $('#ground').innerHTML = `<svg viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true">
     ${trees([[30, 1], [62, .7], [345, 1.1], [376, .75]])}
@@ -668,8 +669,9 @@ const S = {
 };
 let store = null;
 
-function itemsFor(owner) {
-  return S.items.filter((i) => i.owner === owner && i.year === S.year && !i.removed && !i.extra)
+function itemsFor(owner, viewer = owner) {
+  const keepRemoved = viewer !== owner && canSeeBought(viewer, owner);
+  return S.items.filter((i) => i.owner === owner && i.year === S.year && !i.extra && (!i.removed || (keepRemoved && i.boughtBy)))
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || (a.createdAt ?? 0) - (b.createdAt ?? 0));
 }
 function getSession() { try { return JSON.parse(localStorage.getItem(SESSION_KEY)); } catch { return null; } }
@@ -907,7 +909,7 @@ function topbar(active) {
 }
 
 function listCard(p) {
-  const items = itemsFor(p.name);
+  const items = itemsFor(p.name, S.me);
   const see = canSeeBought(S.me, p.name);
   const sorted = items.filter((i) => i.boughtBy).length;
   const pill = see && items.length
@@ -922,8 +924,8 @@ function viewHome() {
   const looked = PEOPLE.filter((p) => p.managedBy?.includes(me));
   const others = PEOPLE.filter((p) => p.name !== me && !looked.includes(p));
   const notices = byName(me).adult
-    ? S.items.filter((i) => i.removed && isMyPurchase(i, me)).map((i) => `<div class="notice">${I.bell}
-        <div><b>${esc(i.owner)}</b> took <b>"${esc(i.title)}"</b> off their list, but it was marked as bought by ${esc(buyerLabel(i))}. You might want to keep the receipt.</div>
+    ? S.items.filter((i) => i.removed && i.year === S.year && isMyPurchase(i, me) && !i['ack_' + me]).map((i) => `<div class="notice">${I.bell}
+        <div><b>${esc(i.owner)}</b> took <b>"${esc(i.title)}"</b> off their list, after ${esc(buyerLabel(i))} had bought it. It's staying on your shopping, and everyone else still sees it as sorted.</div>
         <button class="btn small gold" data-act="dismiss" data-id="${esc(i.id)}">Got it</button></div>`).join('')
     : '';
   return `${topbar('home')}${notices}
@@ -944,19 +946,20 @@ function itemCard(i, idx, ctx) {
   if (href) acts.push(`<a class="btn small ghost" href="${esc(href)}" target="_blank" rel="noopener noreferrer">${I.link} ${esc(domainOf(href))}</a>`);
   if (ctx.buy && !i.boughtBy) acts.push(`<button class="btn small green" data-act="buy" data-id="${esc(i.id)}">${I.gift} I'll get this</button>`);
   if (mineBuy) acts.push(`<button class="btn small ghost" data-act="undo" data-id="${esc(i.id)}">Undo</button>`);
-  if (ctx.edit) {
+  if (ctx.edit && !i.removed) {
     acts.push('<span class="spacer"></span>');
     acts.push(`<button class="mini" data-act="edit" data-id="${esc(i.id)}" aria-label="Edit">${I.edit}</button>`);
     acts.push(`<button class="mini danger" data-act="del" data-id="${esc(i.id)}" aria-label="Delete">${I.bin}</button>`);
   }
   return `<li class="item tag-${esc(i.tag || 'like')} ${bought ? 'is-bought' : ''}" data-id="${esc(i.id)}">
-    ${ctx.drag ? `<span class="handle" data-handle aria-label="Drag to reorder">${I.grip}</span>` : ''}
+    ${ctx.drag && !i.removed ? `<span class="handle" data-handle aria-label="Drag to reorder">${I.grip}</span>` : ''}
     <span class="rank">${idx + 1}</span>
     <div class="ib">
       <div class="ititle">${esc(i.title)}</div>
       <div class="imeta"><span class="chip ${esc(i.tag || 'like')}">${esc(TAGS[i.tag] || TAGS.like)}</span>${i.price ? `<span class="price">${esc(i.price)}</span>` : ''}</div>
       ${i.notes ? `<div class="notes">${esc(i.notes)}</div>` : ''}
       ${bought ? `<div class="boughtby">${I.gift} ${mineBuy ? (i.joint ? `You're getting this (joint with ${esc(i.boughtBy === me ? partnerOf(me) : i.boughtBy)})` : "You're getting this") : `Bought by ${esc(buyerLabel(i))}`}</div>` : ''}
+      ${i.removed ? `<div class="notes"><b>${esc(i.owner)} took this off the list after it was bought.</b> It still counts as sorted.</div>` : ''}
       ${acts.length ? `<div class="iactions">${acts.join('')}</div>` : ''}
     </div>
     ${bought ? '<span class="stamp">Bought</span>' : ''}
@@ -967,7 +970,7 @@ function viewList() {
   const owner = S.listOwner, p = byName(owner), me = S.me;
   if (!p) return viewHome();
   const ctx = { edit: canEdit(me, owner), see: canSeeBought(me, owner), buy: canBuy(me, owner) };
-  const items = itemsFor(owner);
+  const items = itemsFor(owner, me);
   ctx.drag = ctx.edit && items.length > 1;
   const title = owner === me ? 'My wishlist' : `${owner}'s wishlist`;
   let help = '';
@@ -990,7 +993,7 @@ function viewList() {
 
 function viewShopping() {
   const me = S.me, partner = partnerOf(me);
-  const mine = S.items.filter((i) => i.year === S.year && !i.removed && isMyPurchase(i, me))
+  const mine = S.items.filter((i) => i.year === S.year && isMyPurchase(i, me))
     .sort((a, b) => (a.purchased ? 1 : 0) - (b.purchased ? 1 : 0) || (a.boughtAt || a.createdAt || 0) - (b.boughtAt || b.createdAt || 0));
   const sum = (l) => l.reduce((t, i) => t + (costOf(i) || 0), 0);
   const done = mine.filter((i) => i.purchased);
@@ -999,13 +1002,13 @@ function viewShopping() {
   const row = (i) => {
     const href = i.link ? safeHref(i.link) : null, c = costOf(i);
     const joint = i.joint ? `Joint with ${esc(i.boughtBy === me ? partner : i.boughtBy)}` : '';
-    const tags = `${i.extra ? '<span class="tagx">Not on their list</span>' : ''}${joint}`;
+    const tags = `${i.extra ? '<span class="tagx">Not on their list</span>' : ''}${i.removed ? '<span class="tagx">Taken off their list</span>' : ''}${joint}`;
     return `<div class="srow ${i.purchased ? 'done' : ''}" data-id="${esc(i.id)}">
       <button class="tick ${i.purchased ? 'on' : ''}" data-act="purchased" data-id="${esc(i.id)}" aria-pressed="${i.purchased ? 'true' : 'false'}" aria-label="${i.purchased ? 'Bought' : 'Mark as bought'}">${I.check}</button>
       <div class="ib"><b>${esc(i.title)}</b>${tags ? `<small>${tags}</small>` : ''}</div>
       <button class="cost ${c == null ? 'none' : ''}" data-act="cost" data-id="${esc(i.id)}">${c == null ? 'Add cost' : money(c)}</button>
       ${href ? `<a class="mini" href="${esc(href)}" target="_blank" rel="noopener noreferrer" aria-label="Open link">${I.link}</a>` : ''}
-      <button class="mini danger" data-act="${i.extra ? 'delextra' : 'undo'}" data-id="${esc(i.id)}" aria-label="${i.extra ? 'Remove' : 'Not getting it'}">${I.bin}</button>
+      <button class="mini danger" data-act="${i.extra ? 'delextra' : 'undo'}" data-id="${esc(i.id)}" aria-label="${i.extra ? 'Remove' : 'Not getting it after all'}">${i.extra ? I.bin : I.undo}</button>
     </div>`;
   };
   const body = groups.map(([p, l]) => {
@@ -1308,7 +1311,7 @@ document.addEventListener('click', async (e) => {
     case 'del': {
       if (!item || !canEdit(S.me, item.owner)) break;
       const warn = canSeeBought(S.me, item.owner) && item.boughtBy
-        ? ` ${esc(buyerLabel(item))} has already bought this, and they'll get a heads-up.` : '';
+        ? ` ${esc(buyerLabel(item))} has already bought this. It will stay on their shopping and still show as sorted to everyone else.` : '';
       confirmBox('Remove this wish?', `<b>${esc(item.title)}</b> will come off the list.${warn}`, 'Remove', async () => {
         if (item.boughtBy) await store.updateItem(item.id, { removed: true, removedAt: Date.now() });
         else await store.deleteItem(item.id);
@@ -1319,7 +1322,11 @@ document.addEventListener('click', async (e) => {
     case 'buy': if (item && canBuy(S.me, item.owner)) buyBox(item); break;
     case 'undo':
       if (item && isMyPurchase(item, S.me)) {
-        confirmBox('Not getting it after all?', `<b>${esc(item.title)}</b> will go back on ${esc(item.owner)}'s list for someone else to buy.`, 'Put it back', async () => {
+        if (item.removed) {
+          confirmBox('Not getting it after all?', `${esc(item.owner)} already took <b>${esc(item.title)}</b> off the list, so it will disappear completely.`, 'Remove it', async () => {
+            await store.deleteItem(item.id); toast('Removed');
+          });
+        } else confirmBox('Not getting it after all?', `<b>${esc(item.title)}</b> will go back on ${esc(item.owner)}'s list for someone else to buy.`, 'Put it back', async () => {
           await store.updateItem(item.id, { boughtBy: null, joint: false, boughtAt: null, purchased: false, paid: null });
           toast('Back on the list');
         }, false);
@@ -1344,7 +1351,7 @@ document.addEventListener('click', async (e) => {
         });
       }
       break;
-    case 'dismiss': if (item && item.removed && isMyPurchase(item, S.me)) { try { await store.deleteItem(item.id); } catch (err) { toast(friendlyError(err), true); } } break;
+    case 'dismiss': if (item && item.removed && isMyPurchase(item, S.me)) { try { await store.updateItem(item.id, { ['ack_' + S.me]: true }); } catch (err) { toast(friendlyError(err), true); } } break;
     case 'resetpin':
       if (S.me === ADMIN) confirmBox('Reset PIN?', `${esc(el.dataset.name)} will choose a new PIN next time. Their list stays as it is.`, 'Reset', async () => {
         await store.deletePerson(el.dataset.name); toast(`${el.dataset.name}'s PIN has been reset`);
