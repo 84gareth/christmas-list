@@ -32,7 +32,7 @@ h1,h2,.festive{font-family:"Mountains of Christmas",Georgia,serif;font-weight:70
 .moon::after{content:"";position:absolute;width:14px;height:14px;border-radius:50%;background:rgba(200,180,110,.35);top:22px;left:40px;box-shadow:-18px 20px 0 -3px rgba(200,180,110,.3),8px 30px 0 -5px rgba(200,180,110,.3)}
 .star{position:absolute;width:3px;height:3px;border-radius:50%;background:#fff;animation:twinkle 3s ease-in-out infinite}
 @keyframes twinkle{0%,100%{opacity:.25}50%{opacity:1}}
-.sleigh{position:absolute;top:120px;left:0;width:190px;opacity:.92;animation:fly 38s linear infinite;animation-delay:4s;transform:translateX(-260px)}
+.sleigh{position:absolute;top:120px;left:0;width:190px;opacity:.92;animation:fly 38s linear infinite;animation-delay:4s;transform:translateX(-300px)}
 @keyframes fly{0%{transform:translate(-260px,30px) rotate(-4deg)}50%{transform:translate(50vw,-10px) rotate(-2deg)}62%,100%{transform:translate(110vw,-60px) rotate(-6deg)}}
 #ground{position:fixed;left:0;right:0;bottom:0;height:120px;z-index:2;pointer-events:none}
 #ground svg{width:100%;height:100%;display:block}
@@ -268,7 +268,7 @@ h1,h2,.festive{font-family:"Mountains of Christmas",Georgia,serif;font-weight:70
 /* ============================================================
    The Family Christmas List
    ============================================================ */
-const VERSION = '1.4.2';
+const VERSION = '1.4.3';
 
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyBRPZgESoFpIrDzE50Jiav6hdtLWFOoWWM",
@@ -457,16 +457,17 @@ function buildSky() {
     s.style.animationDelay = Math.random() * 3 + 's';
     sky.appendChild(s);
   }
-  sky.insertAdjacentHTML('beforeend', `<svg class="sleigh" viewBox="0 0 190 60" fill="#ffe9a8" aria-hidden="true"><g transform="translate(190 0) scale(-1 1)">
-    <g><ellipse cx="22" cy="30" rx="13" ry="6"/><circle cx="36" cy="24" r="4.5"/><path d="M36 20l-2-10M36 20l3-9M34 13l-4-2M38 14l4-3" stroke="#ffe9a8" stroke-width="1.6" fill="none"/>
+  sky.insertAdjacentHTML('beforeend', `<svg class="sleigh" viewBox="0 0 190 60" fill="#ffe9a8" aria-hidden="true">
+    <g transform="translate(-112 0)">
+      <path d="M118 30h50q8 0 8-10v-6l-10 4h-34q-10 0-14 12z"/><path d="M114 44h62q8 0 10-6" stroke="#ffe9a8" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M124 34v10M168 34v10" stroke="#ffe9a8" stroke-width="2"/>
+      <circle cx="150" cy="8" r="7"/><path d="M143 16h14l2 12h-18z"/><path d="M146 2l10-2 2 5z" fill="#ff4d5a"/>
+      <rect x="128" y="12" width="12" height="10" rx="2"/></g>
+    <path d="M64 24 Q90 36 113 31 M64 27 Q120 42 158 35" stroke="#ffe9a8" stroke-width="1" fill="none" opacity=".7"/>
+    <g transform="translate(102 0)"><ellipse cx="22" cy="30" rx="13" ry="6"/><circle cx="36" cy="24" r="4.5"/><path d="M36 20l-2-10M36 20l3-9M34 13l-4-2M38 14l4-3" stroke="#ffe9a8" stroke-width="1.6" fill="none"/>
       <path d="M13 34l-4 9M18 35l-1 9M27 35l2 9M31 34l5 8" stroke="#ffe9a8" stroke-width="2" fill="none"/></g>
-    <g transform="translate(46 4)"><ellipse cx="22" cy="30" rx="13" ry="6"/><circle cx="36" cy="24" r="4.5"/><path d="M36 20l-2-10M36 20l3-9M34 13l-4-2M38 14l4-3" stroke="#ffe9a8" stroke-width="1.6" fill="none"/>
-      <path d="M13 34l-4 9M18 35l-1 9M27 35l2 9M31 34l5 8" stroke="#ffe9a8" stroke-width="2" fill="none"/><circle cx="40" cy="24" r="2" fill="#ff4d5a"/></g>
-    <path d="M10 31 Q60 40 110 38 M56 35 Q90 40 118 40" stroke="#ffe9a8" stroke-width="1" fill="none" opacity=".7"/>
-    <path d="M118 30h50q8 0 8-10v-6l-10 4h-34q-10 0-14 12z"/><path d="M114 44h62q8 0 10-6" stroke="#ffe9a8" stroke-width="3" fill="none" stroke-linecap="round"/>
-    <path d="M124 34v10M168 34v10" stroke="#ffe9a8" stroke-width="2"/>
-    <circle cx="150" cy="8" r="7"/><path d="M143 16h14l2 12h-18z"/><path d="M146 2l10-2 2 5z" fill="#ff4d5a"/>
-    <rect x="158" y="10" width="12" height="10" rx="2"/></g></svg>`);
+    <g transform="translate(148 4)"><ellipse cx="22" cy="30" rx="13" ry="6"/><circle cx="36" cy="24" r="4.5"/><path d="M36 20l-2-10M36 20l3-9M34 13l-4-2M38 14l4-3" stroke="#ffe9a8" stroke-width="1.6" fill="none"/>
+      <path d="M13 34l-4 9M18 35l-1 9M27 35l2 9M31 34l5 8" stroke="#ffe9a8" stroke-width="2" fill="none"/><circle cx="40" cy="24" r="2" fill="#ff4d5a"/></g></svg>`);
   const trees = (xs) => xs.map(([x, s]) => `<path d="M${x} ${70 - 52 * s}l${14 * s} ${20 * s}h${-6 * s}l${12 * s} ${16 * s}h${-7 * s}l${12 * s} ${16 * s}H${x - 26 * s}l${12 * s} ${-16 * s}h${-7 * s}l${12 * s} ${-16 * s}h${-6 * s}z" fill="#0f3b2a"/>`).join('');
   $('#ground').innerHTML = `<svg viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true">
     ${trees([[30, 1], [62, .7], [345, 1.1], [376, .75]])}
