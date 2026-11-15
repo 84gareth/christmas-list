@@ -268,7 +268,7 @@ h1,h2,.festive{font-family:"Mountains of Christmas",Georgia,serif;font-weight:70
 /* ============================================================
    The Family Christmas List
    ============================================================ */
-const VERSION = '1.4.3';
+const VERSION = '1.4.4';
 
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyBRPZgESoFpIrDzE50Jiav6hdtLWFOoWWM",
@@ -1309,13 +1309,25 @@ document.addEventListener('click', async (e) => {
     case 'edit': if (item && canEdit(S.me, item.owner)) itemForm(item.owner, item); break;
     case 'del': {
       if (!item || !canEdit(S.me, item.owner)) break;
-      const warn = canSeeBought(S.me, item.owner) && item.boughtBy
-        ? ` ${esc(buyerLabel(item))} has already bought this. It will stay on their shopping.` : '';
-      confirmBox('Remove this wish?', `<b>${esc(item.title)}</b> will come off the list.${warn}`, 'Remove', async () => {
+      const doRemove = async () => {
         if (item.boughtBy) await store.updateItem(item.id, { removed: true, removedAt: Date.now() });
         else await store.deleteItem(item.id);
         toast('Wish removed');
-      });
+      };
+      if (!canSeeBought(S.me, item.owner)) {
+        /* shown on every removal, bought or not, so it never gives anything away */
+        const whose = item.owner === S.me ? 'you' : esc(item.owner);
+        openModal(`<h2>Are you sure?</h2>
+          <div class="big-item">${esc(item.title)}</div>
+          <p style="margin-top:12px">Someone may already have bought this for ${whose}. You won't be told either way, so it's best to leave it on the list.</p>
+          <p>If it's been bought, removing it won't undo that: it may still turn up on Christmas Day.</p>
+          <div class="row"><button class="btn green" data-act="close">Keep it</button><button class="btn ghost" id="yes">Remove anyway</button></div>`, (m) => {
+          m.querySelector('#yes').onclick = async () => { closeModal(); try { await doRemove(); } catch (e) { toast(friendlyError(e), true); } };
+        });
+        break;
+      }
+      const warn = item.boughtBy ? ` ${esc(buyerLabel(item))} has already bought this. It will stay on their shopping.` : '';
+      confirmBox('Remove this wish?', `<b>${esc(item.title)}</b> will come off the list.${warn}`, 'Remove', doRemove);
       break;
     }
     case 'buy': if (item && canBuy(S.me, item.owner)) buyBox(item); break;
