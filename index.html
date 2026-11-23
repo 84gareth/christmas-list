@@ -7,7 +7,7 @@
 <title>The Family Christmas List</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@700&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Mountains+of+Christmas:wght@700&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
   --night:#0b1e3f;--night2:#183a6b;--red:#d62839;--red-d:#a51c2b;--green:#1f7a4d;--green-d:#145a37;
@@ -74,10 +74,75 @@ h1,h2,.festive{font-family:"Mountains of Christmas",Georgia,serif;font-weight:70
 .iconbtn{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.18)}
 .iconbtn:active{transform:scale(.92)}
 .iconbtn svg{width:22px;height:22px}
-.tabs{display:flex;gap:8px;margin:14px 0 4px;background:rgba(0,0,0,.22);padding:5px;border-radius:999px}
-.tab{flex:1;padding:9px 6px;border-radius:999px;font-weight:800;font-size:15px;color:#cfe0ff;display:flex;align-items:center;justify-content:center;gap:6px}
+.tabs{display:flex;gap:4px;margin:14px 0 4px;background:rgba(0,0,0,.22);padding:5px;border-radius:999px}
+.tab{flex:1;min-width:0;padding:9px 4px;border-radius:999px;font-weight:800;font-size:14px;color:#cfe0ff;display:flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap}
+@media (max-width:400px){.tabs.many .tab svg{display:none}}
 .tab svg{width:18px;height:18px}
 .tab.on{background:var(--red);color:#fff;box-shadow:0 3px 0 var(--red-d)}
+
+/* ---------- birthday mode ---------- */
+body{transition:background .5s}
+body.bday{background:radial-gradient(ellipse at 50% -10%,#ff8fd0 0%,#b44dff 34%,#5a23a8 68%,#2a1157 100%) fixed}
+body.bday .moon,body.bday .sleigh,body.bday #ground{display:none}
+body.bday .star{background:#ffe066}
+body.bday .title,body.bday .sub,body.bday .listhead h1,body.bday .hello,body.bday .party{font-family:Fredoka,Nunito,system-ui,sans-serif;letter-spacing:0}
+body.bday .tab.on{background:#ff4fa3;box-shadow:0 3px 0 #c42a7c}
+body.bday .countdown,body.bday .topbar .cd{color:#ffe066}
+body.bday .shh{background:rgba(40,0,80,.35)}
+body.bday .hint{color:#f3dcff}
+.balloons{display:none;position:absolute;inset:0}
+body.bday .balloons{display:block}
+.balloons svg{position:absolute;bottom:-160px;width:54px;animation:rise linear infinite;opacity:.9}
+@keyframes rise{0%{transform:translate(0,0) rotate(-4deg)}50%{transform:translate(18px,-60vh) rotate(4deg)}100%{transform:translate(-6px,-125vh) rotate(-3deg)}}
+.bunting{display:block;width:calc(100% + 32px);margin:0 -16px;height:38px}
+.bunting .flag{transform-origin:top center;animation:flutter 2.4s ease-in-out infinite}
+.bunting .flag:nth-child(2n){animation-delay:.6s}
+@keyframes flutter{0%,100%{transform:skewX(0)}50%{transform:skewX(6deg)}}
+.balloon{overflow:visible;display:block;flex:none}
+.bhero{position:relative;margin-top:14px;border-radius:24px;padding:18px 16px;color:#3a1252;background:linear-gradient(135deg,#fff6fb 0%,#ffe3f3 60%,#f4e3ff 100%);box-shadow:var(--shadow);overflow:hidden;text-align:center}
+.bhero h2{font-family:Fredoka,Nunito,sans-serif;font-size:30px;margin:4px 0 2px;color:#c42a7c}
+.bhero p{margin:4px 0;font-weight:700}
+.bhero .cake{width:110px;height:96px;margin:0 auto;display:block}
+.flame{transform-origin:50% 100%;animation:flick .5s ease-in-out infinite alternate}
+@keyframes flick{from{transform:scale(1,1)}to{transform:scale(.85,1.15)}}
+.mybday{display:flex;align-items:center;gap:12px;width:100%;text-align:left;margin-top:16px;padding:14px;border-radius:22px;color:#3a1252;
+  background:linear-gradient(135deg,#fffaf0 0%,#ffeaf6 100%);border:3px dashed #ff4fa3;box-shadow:var(--shadow)}
+.mybday:active{transform:translateY(2px)}
+.mybday .ct{flex:1;min-width:0}
+.mybday .ct b{display:block;font-family:Fredoka,Nunito,sans-serif;font-size:26px;line-height:1.1}
+.mybday .ct small{display:block;font-weight:800;color:#7a4b8a;font-size:14px;margin-top:2px}
+.livebar{margin-top:8px;height:10px;border-radius:999px;background:#f0d6ea;overflow:hidden}
+.livebar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#ff4fa3,#ffb03b)}
+.daytile{flex:none;width:66px;border-radius:14px;overflow:hidden;text-align:center;background:#fff;box-shadow:0 3px 0 rgba(0,0,0,.12)}
+.daytile b{display:block;font-family:Fredoka,Nunito,sans-serif;font-size:26px;line-height:1.1;padding:4px 0 0;color:#3a1252}
+.daytile small{display:block;font-size:11px;font-weight:900;color:#7a4b8a;padding-bottom:4px}
+.daytile em{display:block;background:#ff4fa3;color:#fff;font-style:normal;font-weight:900;font-size:11px;padding:2px 0;letter-spacing:.5px;text-transform:uppercase}
+.daytile.today em{background:#ffb03b}
+.daytile.soon em{background:#9b4dff}
+.daytile.none b{font-size:18px;padding:10px 0 2px}
+.brow{display:flex;align-items:center;gap:12px;width:100%;text-align:left;margin-top:12px;padding:12px;border-radius:20px;background:var(--paper);color:var(--ink);box-shadow:var(--shadow);transition:transform .15s}
+.brow:active{transform:translateY(2px) scale(.99)}
+.brow .ct{flex:1;min-width:0}
+.brow .ct b{display:block;font-size:19px;font-weight:900;line-height:1.15}
+.brow .ct small{display:block;color:var(--muted);font-weight:700;font-size:14px}
+.bstat{display:inline-flex;align-items:center;gap:5px;margin-top:5px;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:900;background:#f1e6f7;color:#6d3a85}
+.bstat svg{width:13px;height:13px}
+.bstat.open{background:#ffe1f1;color:#c42a7c}
+.bstat.ok{background:#dff3e6;color:var(--green-d)}
+.locked{text-align:center;padding:24px 10px 10px}
+.locked .bigcount{font-family:Fredoka,Nunito,sans-serif;font-size:64px;line-height:1;color:#ffe066;text-shadow:0 4px 0 rgba(0,0,0,.25)}
+.locked svg{width:120px;height:120px}
+.nextb{display:flex;align-items:center;gap:10px;width:100%;margin-top:12px;padding:10px 12px;border-radius:16px;text-align:left;color:#fff;
+  background:linear-gradient(90deg,#b44dff,#ff4fa3);box-shadow:0 4px 0 #7a2aa8,0 8px 18px rgba(0,0,0,.25);font-weight:800;font-size:14px}
+.nextb svg{width:26px;height:26px;flex:none}
+.nextb span{flex:1}
+.notice.move{border-left-color:#ff4fa3}
+.subtabs{display:flex;gap:6px;margin:12px 0 0}
+.subtabs button{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 6px;border-radius:14px;font-weight:900;font-size:14px;color:#f3dcff;background:rgba(40,0,80,.35);border:2px solid transparent}
+.subtabs button svg{width:17px;height:17px}
+.subtabs button.on{background:#fff;color:#c42a7c;border-color:#ffb3dc}
+.bwhen{display:flex;align-items:center;gap:6px;margin:-2px 0 4px;color:#9b4d8a;font-weight:800;font-size:13px}
+.bwhen svg{width:15px;height:15px}
 
 /* cards */
 .card{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--paper);color:var(--ink);
@@ -246,6 +311,7 @@ h1,h2,.festive{font-family:"Mountains of Christmas",Georgia,serif;font-weight:70
 .arow{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px dashed #e2d3b6}
 .arow:first-child{border-top:0}
 .arow b{flex:1}
+.bdsel{font:inherit;font-weight:800;font-size:14px;padding:6px;border-radius:10px;border:2px solid #e2d3b6;background:#fff;color:var(--ink)}
 .loading{text-align:center;padding-top:30vh}
 .loading .festive{font-size:34px}
 .spin{width:70px;height:70px;margin:0 auto 10px;animation:spin 1.6s linear infinite}
@@ -268,7 +334,7 @@ h1,h2,.festive{font-family:"Mountains of Christmas",Georgia,serif;font-weight:70
 /* ============================================================
    The Family Christmas List
    ============================================================ */
-const VERSION = '1.4.4';
+const VERSION = '1.5.0';
 
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyBRPZgESoFpIrDzE50Jiav6hdtLWFOoWWM",
@@ -297,6 +363,9 @@ const PEOPLE = [
   { name: 'Freddy',    adult: false,                       colour: '#3fae49' },
   { name: 'Poppy',     adult: false, pet: true,            colour: '#a0632f' },
 ];
+const BIRTHDAYS = { Gareth: '06-13', Amy: '02-22', Charlie: '04-11', Sam: '06-08', Christine: '05-12', Claire: '10-31', Lily: '06-24', Freddy: '07-16', Trevor: '03-26', Joe: '10-08', Katie: '03-21', Robert: '08-24' };
+const BDAY_OPEN_MONTHS = 2;
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const TAGS = { must: 'Must have', like: 'Would like', surprise: 'Nice to have' };
 
 const DEMO = new URLSearchParams(location.search).has('demo');
@@ -411,6 +480,9 @@ const I = {
   link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 6 0l3-3a4 4 0 0 0-6-6l-1 1"/><path d="M14 10a4 4 0 0 0-6 0l-3 3a4 4 0 0 0 6 6l1-1"/></svg>',
   gift: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="5" rx="1"/><path d="M5 13v8h14v-8M12 8v13"/><path d="M12 8C10 4 6 4 7 7c.5 1 3 1 5 1zM12 8c2-4 6-4 5-1-.5 1-3 1-5 1z"/></svg>',
   undo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>',
+  cake: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21h16M5 21v-7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7"/><path d="M5 16c1.5 1 3 1 4.5 0s3-1 4.5 0 3 1 4.5 0"/><path d="M12 12V8"/><path d="M12 4.5c.8.8.8 2 0 2.5-.8-.5-.8-1.7 0-2.5z" fill="currentColor"/></svg>',
+  lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+  tree: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l5 7h-3l4 6h-4l3 5H7l3-5H6l4-6H7z"/><path d="M12 20v2"/></svg>',
   check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
   plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
   bell: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a1.5 1.5 0 0 1 1.5 1.5v.6A6.5 6.5 0 0 1 18.5 10.5v4l2 3H3.5l2-3v-4A6.5 6.5 0 0 1 10.5 4.1v-.6A1.5 1.5 0 0 1 12 2z"/><circle cx="12" cy="20" r="2"/></svg>',
@@ -436,6 +508,7 @@ function bauble(p, size = 64) {
   </svg>`;
 }
 function lights() {
+  if (S.bdayMode) return bunting();
   const cols = ['#ff4d5a', '#42e08a', '#ffd34d', '#4dc3ff', '#ff8ae0'];
   let bulbs = '';
   for (let i = 0; i < 13; i++) {
@@ -443,6 +516,37 @@ function lights() {
     bulbs += `<g class="bulb" style="color:${cols[i % 5]}"><rect x="${x - 3}" y="${y - 2}" width="6" height="5" fill="#2a3a2a"/><ellipse cx="${x}" cy="${y + 9}" rx="5.5" ry="8" fill="currentColor"/></g>`;
   }
   return `<svg class="lights" viewBox="0 0 400 38" preserveAspectRatio="none" aria-hidden="true"><path d="M0 4 Q200 40 400 4" fill="none" stroke="#2a3a2a" stroke-width="2"/>${bulbs}</svg>`;
+}
+function balloon(p, size = 52) {
+  const c = p.colour, id = 'bl' + p.name;
+  return `<svg class="balloon" width="${size}" height="${size * 1.4}" viewBox="0 0 64 90" aria-hidden="true">
+    <defs><radialGradient id="${id}" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset=".22" stop-color="${c}"/><stop offset="1" stop-color="${c}" stop-opacity=".8"/></radialGradient></defs>
+    <path d="M32 64 C28 72 36 78 31 90" stroke="rgba(255,255,255,.75)" stroke-width="1.6" fill="none"/>
+    <ellipse cx="32" cy="33" rx="26" ry="30" fill="url(#${id})" stroke="rgba(0,0,0,.12)" stroke-width="1.5"/>
+    <path d="M28 62h8l-4 5z" fill="${c}"/>
+    <ellipse cx="22" cy="20" rx="5" ry="8" fill="#fff" opacity=".35" transform="rotate(-25 22 20)"/>
+    ${p.pet ? '<g fill="#fff" stroke="rgba(0,0,0,.2)" stroke-width="1"><ellipse cx="32" cy="41" rx="8" ry="6.5"/><ellipse cx="22" cy="31" rx="3.5" ry="4.5"/><ellipse cx="28" cy="26" rx="3.5" ry="4.5"/><ellipse cx="36" cy="26" rx="3.5" ry="4.5"/><ellipse cx="42" cy="31" rx="3.5" ry="4.5"/></g>'
+      : `<text x="32" y="44" text-anchor="middle" font-family="Fredoka,Nunito,sans-serif" font-weight="700" font-size="28" fill="#fff" stroke="rgba(0,0,0,.2)" stroke-width="1">${esc(p.name[0])}</text>`}
+  </svg>`;
+}
+const cakeSVG = `<svg class="cake" viewBox="0 0 120 104" aria-hidden="true">
+  <ellipse cx="60" cy="98" rx="54" ry="6" fill="rgba(0,0,0,.12)"/>
+  <rect x="14" y="58" width="92" height="38" rx="8" fill="#ff8fc8"/><path d="M14 66 q11 10 23 0 q11 10 23 0 q11 10 23 0 q11 10 23 0 V58 H14z" fill="#fff"/>
+  <rect x="26" y="34" width="68" height="28" rx="7" fill="#b98cff"/><path d="M26 41 q8.5 8 17 0 q8.5 8 17 0 q8.5 8 17 0 q8.5 8 17 0 V34 H26z" fill="#fff"/>
+  <g fill="#ffe066"><circle cx="30" cy="82" r="2.5"/><circle cx="52" cy="86" r="2.5"/><circle cx="74" cy="80" r="2.5"/><circle cx="94" cy="86" r="2.5"/></g>
+  ${[44, 60, 76].map((x, k) => `<rect x="${x - 3}" y="14" width="6" height="20" rx="2" fill="${['#4dc3ff', '#ffb03b', '#42e08a'][k]}"/><path class="flame" style="animation-delay:${k * .15}s" d="M${x} 2 c5 6 4 11 0 11 c-4 0 -5 -5 0 -11z" fill="#ffb03b"/>`).join('')}
+</svg>`;
+const giftLockSVG = `<svg viewBox="0 0 120 120" aria-hidden="true"><rect x="18" y="46" width="84" height="62" rx="8" fill="#ff4fa3"/><rect x="12" y="34" width="96" height="18" rx="5" fill="#ff8fc8"/>
+  <rect x="54" y="34" width="12" height="74" fill="#ffe066"/><path d="M60 34c-14-20-34-14-26-2 4 5 16 4 26 2zM60 34c14-20 34-14 26-2-4 5-16 4-26 2z" fill="#ffe066"/>
+  <rect x="44" y="72" width="32" height="24" rx="4" fill="#3a1252"/><path d="M50 72v-7a10 10 0 0 1 20 0v7" stroke="#3a1252" stroke-width="5" fill="none"/><circle cx="60" cy="83" r="3.5" fill="#ffe066"/></svg>`;
+function bunting() {
+  const cols = ['#ff4fa3', '#ffe066', '#4dc3ff', '#42e08a', '#b98cff', '#ffb03b'];
+  let flags = '';
+  for (let i = 0; i < 14; i++) {
+    const x = 6 + i * 28.5, y = 4 + Math.sin((i / 13) * Math.PI) * 12;
+    flags += `<path class="flag" d="M${x} ${y}h22l-11 20z" fill="${cols[i % cols.length]}"/>`;
+  }
+  return `<svg class="bunting" viewBox="0 0 400 38" preserveAspectRatio="none" aria-hidden="true"><path d="M0 4 Q200 34 400 4" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="2"/>${flags}</svg>`;
 }
 const snowmanSVG = `<svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="88" r="28" fill="#fff"/><circle cx="60" cy="48" r="20" fill="#fff"/><circle cx="53" cy="44" r="2.5" fill="#222"/><circle cx="67" cy="44" r="2.5" fill="#222"/><path d="M60 50l14 4-14 2z" fill="#ff8a1f"/><path d="M42 62h36l-4 8H46z" fill="#d62839"/><rect x="72" y="62" width="8" height="20" rx="3" fill="#d62839"/><rect x="44" y="18" width="32" height="8" rx="2" fill="#222"/><rect x="49" y="2" width="22" height="18" rx="2" fill="#222"/><circle cx="60" cy="82" r="3" fill="#222"/><circle cx="60" cy="94" r="3" fill="#222"/></svg>`;
 
@@ -468,6 +572,8 @@ function buildSky() {
       <path d="M13 34l-4 9M18 35l-1 9M27 35l2 9M31 34l5 8" stroke="#ffe9a8" stroke-width="2" fill="none"/></g>
     <g transform="translate(148 4)"><ellipse cx="22" cy="30" rx="13" ry="6"/><circle cx="36" cy="24" r="4.5"/><path d="M36 20l-2-10M36 20l3-9M34 13l-4-2M38 14l4-3" stroke="#ffe9a8" stroke-width="1.6" fill="none"/>
       <path d="M13 34l-4 9M18 35l-1 9M27 35l2 9M31 34l5 8" stroke="#ffe9a8" stroke-width="2" fill="none"/><circle cx="40" cy="24" r="2" fill="#ff4d5a"/></g></svg>`);
+  const bcols = ['#ff4fa3', '#ffe066', '#4dc3ff', '#42e08a', '#b98cff', '#ffb03b', '#ff6f61'];
+  sky.insertAdjacentHTML('beforeend', `<div class="balloons">${bcols.map((c, k) => `<svg viewBox="0 0 64 120" style="left:${6 + k * 13.5}%;animation-duration:${16 + (k % 3) * 5}s;animation-delay:-${(k * 3.7) % 16}s"><path d="M32 64 C28 80 38 96 30 120" stroke="rgba(255,255,255,.6)" stroke-width="1.5" fill="none"/><ellipse cx="32" cy="33" rx="24" ry="29" fill="${c}"/><path d="M28 61h8l-4 5z" fill="${c}"/><ellipse cx="23" cy="20" rx="5" ry="8" fill="#fff" opacity=".35" transform="rotate(-25 23 20)"/></svg>`).join('')}</div>`);
   const trees = (xs) => xs.map(([x, s]) => `<path d="M${x} ${70 - 52 * s}l${14 * s} ${20 * s}h${-6 * s}l${12 * s} ${16 * s}h${-7 * s}l${12 * s} ${16 * s}H${x - 26 * s}l${12 * s} ${-16 * s}h${-7 * s}l${12 * s} ${-16 * s}h${-6 * s}z" fill="#0f3b2a"/>`).join('');
   $('#ground').innerHTML = `<svg viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true">
     ${trees([[30, 1], [62, .7], [345, 1.1], [376, .75]])}
@@ -483,7 +589,8 @@ function initSnow() {
     const dpr = Math.min(devicePixelRatio || 1, 2);
     w = innerWidth; h = innerHeight; c.width = w * dpr; c.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const n = reduce ? 0 : Math.round(Math.min(150, (w * h) / 7000));
-    flakes = Array.from({ length: n }, () => ({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 2.6 + .8, vy: Math.random() * .6 + .3, ph: Math.random() * 6.28 }));
+    const cc = ['#ff4fa3', '#ffe066', '#4dc3ff', '#42e08a', '#b98cff', '#ffb03b'];
+    flakes = Array.from({ length: n }, (_, k) => ({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 2.6 + .8, vy: Math.random() * .6 + .3, ph: Math.random() * 6.28, c: cc[k % cc.length] }));
   };
   size(); addEventListener('resize', size);
   const tick = (t) => {
@@ -491,7 +598,10 @@ function initSnow() {
     for (const f of flakes) {
       f.y += f.vy * f.r * .6; f.x += Math.sin(t / 1800 + f.ph) * .35;
       if (f.y > h + 5) { f.y = -5; f.x = Math.random() * w; }
-      ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, 6.283); ctx.fill();
+      if (S.bdayMode) {
+        ctx.save(); ctx.translate(f.x, f.y); ctx.rotate(t / 500 + f.ph); ctx.fillStyle = f.c;
+        ctx.fillRect(-f.r * 1.4, -f.r * .6, f.r * 2.8, f.r * 1.2); ctx.restore();
+      } else { ctx.fillStyle = 'rgba(255,255,255,.85)'; ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, 6.283); ctx.fill(); }
     }
     requestAnimationFrame(tick);
   };
@@ -559,6 +669,21 @@ function jingle() {
   [[E, 0], [E, 1], [E, 2], [E, 4], [E, 5], [E, 6], [E, 8], [G, 9], [C, 10], [D, 11], [E, 12]]
     .forEach(([f, k]) => bell(f, k * b, k === 12 ? 1.6 : .8, .14));
   setTimeout(sparkle, 2400);
+}
+function happyBirthday() {
+  const G = 392, A = 440, B = 493.88, C = 523.25, D = 587.33, b = .34;
+  let t = 0;
+  [[G, .75], [G, .25], [A, 1], [G, 1], [C, 1], [B, 2], [G, .75], [G, .25], [A, 1], [G, 1], [D, 1], [C, 2]]
+    .forEach(([f, d]) => { bell(f, t * b, Math.max(.5, d * b * 1.6), .13); t += d; });
+  duckMusic(t * b + .5);
+  setTimeout(sparkle, t * b * 1000);
+}
+function partyHorn() {
+  const a = audio(); if (!a) return;
+  const o = a.createOscillator(), g = a.createGain(), t = a.currentTime;
+  o.type = 'sawtooth'; o.frequency.setValueAtTime(330, t); o.frequency.exponentialRampToValueAtTime(660, t + .25);
+  g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.05, t + .03); g.gain.exponentialRampToValueAtTime(.0001, t + .4);
+  o.connect(g).connect(a.destination); o.start(t); o.stop(t + .45);
 }
 function sadTrombone() { [392, 370, 349].forEach((f, i) => bell(f, i * .2, .6, .1)); }
 
@@ -669,6 +794,33 @@ const S = {
   metaChecked: false,
 };
 let store = null;
+
+/* ---------- birthdays ---------- */
+const today0 = () => { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); };
+const isoDay = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const daysBetween = (a, b) => Math.round((b - a) / 864e5);
+const fmtDay = (d) => `${d.getDate()} ${MONTHS[d.getMonth()]}`;
+const daysText = (n) => (n === 0 ? 'today' : n === 1 ? 'tomorrow' : `in ${n} days`);
+function bdayOf(name) {
+  if (isPet(name)) return null;
+  const set = S.meta?.birthdays || {};
+  const v = Object.prototype.hasOwnProperty.call(set, name) ? set[name] : BIRTHDAYS[name];
+  return /^\d\d-\d\d$/.test(v || '') ? v : null;
+}
+function bdayInfo(name) {
+  const md = bdayOf(name); if (!md) return null;
+  const [m, d] = md.split('-').map(Number), t = today0();
+  let b = new Date(t.getFullYear(), m - 1, d);
+  if (b < t) b = new Date(t.getFullYear() + 1, m - 1, d);
+  const opens = new Date(b.getFullYear(), b.getMonth() - BDAY_OPEN_MONTHS, b.getDate());
+  return { date: b, iso: isoDay(b), days: daysBetween(t, b), opens, open: t >= opens, opensIn: Math.max(0, daysBetween(t, opens)), span: daysBetween(opens, b) || 1 };
+}
+const isArchived = (i) => !!(i.boughtBy && i.cycle && i.cycle < isoDay(today0()));
+function bItemsFor(owner) {
+  return S.items.filter((i) => i.owner === owner && i.list === 'birthday' && !i.removed && !isArchived(i))
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || (a.createdAt ?? 0) - (b.createdAt ?? 0));
+}
+const canViewBList = (viewer, owner) => !isPet(owner) && (viewer === owner || canEdit(viewer, owner) || !!bdayInfo(owner)?.open);
 
 function itemsFor(owner) {
   return S.items.filter((i) => i.owner === owner && i.year === S.year && !i.extra && !i.removed)
@@ -799,6 +951,7 @@ function onData(d) {
   S.people = d.people || {};
   S.items = d.items || [];
   S.year = d.meta?.year || new Date().getFullYear();
+  S.meta = d.meta || {};
   S.error = null;
   if (!d.meta && !S.metaChecked) { S.metaChecked = true; store.setMeta({ year: S.year }).catch(onError); }
   S.metaChecked = true;
@@ -818,6 +971,8 @@ function onData(d) {
 function render() {
   if (S.dragging) { S.pending = true; return; }
   const v = S.view;
+  S.bdayMode = !!S.me && (v === 'birthdays' || (v === 'list' && S.listMode === 'birthday'));
+  document.body.classList.toggle('bday', S.bdayMode);
   let html = '';
   if (v === 'loading') html = viewLoading();
   else if (v === 'login') html = viewLogin();
@@ -826,6 +981,7 @@ function render() {
   else if (v === 'home') html = viewHome();
   else if (v === 'list') html = viewList();
   else if (v === 'shopping') html = viewShopping();
+  else if (v === 'birthdays') html = viewBirthdays();
   else if (v === 'admin') html = S.me === ADMIN ? viewAdmin() : viewHome();
   $('#app').innerHTML = html;
 }
@@ -895,14 +1051,17 @@ function audioButtons() {
 }
 function topbar(active) {
   const me = byName(S.me);
-  const tabs = me.adult ? `<nav class="tabs">
-      <button class="tab ${active === 'home' ? 'on' : ''}" data-act="nav" data-v="home">${I.list} Lists</button>
-      <button class="tab ${active === 'shopping' ? 'on' : ''}" data-act="nav" data-v="shopping">${I.bag} Shopping</button>
+  const tabs = `<nav class="tabs ${S.me === ADMIN ? 'many' : ''}">
+      <button class="tab ${active === 'home' ? 'on' : ''}" data-act="nav" data-v="home">${I.tree} Christmas</button>
+      <button class="tab ${active === 'birthdays' ? 'on' : ''}" data-act="nav" data-v="birthdays">${I.cake} Birthdays</button>
+      ${me.adult ? `<button class="tab ${active === 'shopping' ? 'on' : ''}" data-act="nav" data-v="shopping">${I.bag} Shopping</button>` : ''}
       ${S.me === ADMIN ? `<button class="tab ${active === 'admin' ? 'on' : ''}" data-act="nav" data-v="admin">${I.key} Admin</button>` : ''}
-    </nav>` : '';
+    </nav>`;
+  const mine = bdayInfo(S.me);
+  const cd = S.bdayMode ? (mine ? (mine.days === 0 ? 'Happy birthday!' : `Birthday ${daysText(mine.days)}`) : 'Birthday not set yet') : countdownText();
   return `<header class="topbar">${lights()}
-    <div class="row">${bauble(me, 40)}
-      <div class="who"><div class="hello">Hello, ${esc(me.name)}</div><div class="cd">${esc(countdownText())}</div></div>
+    <div class="row">${S.bdayMode ? balloon(me, 34) : bauble(me, 40)}
+      <div class="who"><div class="hello">Hello, ${esc(me.name)}</div><div class="cd">${esc(cd)}</div></div>
       ${audioButtons()}
       <button class="iconbtn" data-act="logout" aria-label="Switch person">${I.door}</button>
     </div>${tabs}</header>${errBanner()}`;
@@ -919,16 +1078,28 @@ function listCard(p) {
     <span class="ct"><b>${esc(p.name)}</b>${pill}</span></button>`;
 }
 
+function noticesFor(me) {
+  const removed = S.items.filter((i) => i.removed && (i.year === S.year || (i.list === 'birthday' && !isArchived(i))) && isMyPurchase(i, me) && !i['ack_' + me])
+    .map((i) => `<div class="notice">${I.bell}
+        <div><b>${esc(i.owner)}</b> took <b>"${esc(i.title)}"</b> off their ${i.list === 'birthday' ? 'birthday ' : ''}list, after ${esc(buyerLabel(i))} had bought it. It's staying on your shopping as bought.</div>
+        <button class="btn small gold" data-act="dismiss" data-id="${esc(i.id)}">Got it</button></div>`);
+  const moved = S.items.filter((i) => i.moveId && !i.removed && !isArchived(i) && isMyPurchase(i, me) && i['mvack_' + me] !== i.moveId)
+    .map((i) => {
+      const toB = i.list === 'birthday', b = bdayInfo(i.owner);
+      return `<div class="notice move">${toB ? I.cake : I.tree}
+        <div><b>${esc(i.owner)}</b> moved <b>"${esc(i.title)}"</b> to their ${toB ? 'birthday' : 'Christmas'} list. You'd already bought it, so it's still yours to give${toB && b ? `, now for their birthday on ${fmtDay(b.date)}` : toB ? ', now for their birthday' : ', now at Christmas'}.</div>
+        <button class="btn small gold" data-act="ackmove" data-id="${esc(i.id)}">Got it</button></div>`;
+    });
+  return removed.join('') + moved.join('');
+}
 function viewHome() {
   const me = S.me, mine = itemsFor(me);
   const looked = PEOPLE.filter((p) => p.managedBy?.includes(me));
   const others = PEOPLE.filter((p) => p.name !== me && !looked.includes(p));
-  const notices = byName(me).adult
-    ? S.items.filter((i) => i.removed && i.year === S.year && isMyPurchase(i, me) && !i['ack_' + me]).map((i) => `<div class="notice">${I.bell}
-        <div><b>${esc(i.owner)}</b> took <b>"${esc(i.title)}"</b> off their list, after ${esc(buyerLabel(i))} had bought it. It's staying on your shopping as bought.</div>
-        <button class="btn small gold" data-act="dismiss" data-id="${esc(i.id)}">Got it</button></div>`).join('')
-    : '';
-  return `${topbar('home')}${notices}
+  const notices = byName(me).adult ? noticesFor(me) : '';
+  const upcoming = PEOPLE.filter((p) => p.name !== me && !p.pet).map((p) => [p, bdayInfo(p.name)]).filter(([, b]) => b).sort((a, b) => a[1].days - b[1].days)[0];
+  const strip = upcoming ? `<button class="nextb" data-act="nav" data-v="birthdays">${I.cake}<span>${upcoming[1].days === 0 ? `It's ${esc(upcoming[0].name)}'s birthday today!` : `Next birthday: ${esc(upcoming[0].name)}, ${fmtDay(upcoming[1].date)} (${daysText(upcoming[1].days)})`}</span>${I.chev}</button>` : '';
+  return `${topbar('home')}${notices}${strip}
     <button class="card mine" data-act="open" data-owner="${esc(me)}">${bauble(byName(me), 56)}
       <span class="ct"><b>My wishlist</b><small>${mine.length ? plural(mine.length, 'wish', 'wishes') + (isManaged(me) ? ' · tap to see them' : ' · tap to add or sort') : (isManaged(me) ? 'Nothing on it yet' : 'Tap here to write your first wish')}</small></span>${I.chev.replace('<svg', '<svg class="chev"')}</button>
     ${looked.length ? `<h2 class="sub">Lists you look after</h2><div class="grid">${looked.map(listCard).join('')}</div>` : ''}
@@ -948,6 +1119,7 @@ function itemCard(i, idx, ctx) {
   if (mineBuy) acts.push(`<button class="btn small ghost" data-act="undo" data-id="${esc(i.id)}">Undo</button>`);
   if (ctx.edit && !i.removed) {
     acts.push('<span class="spacer"></span>');
+    if (!isPet(i.owner)) acts.push(`<button class="mini" data-act="move" data-id="${esc(i.id)}" aria-label="${i.list === 'birthday' ? 'Move to Christmas list' : 'Move to birthday list'}" title="${i.list === 'birthday' ? 'Move to Christmas list' : 'Move to birthday list'}">${i.list === 'birthday' ? I.tree : I.cake}</button>`);
     acts.push(`<button class="mini" data-act="edit" data-id="${esc(i.id)}" aria-label="Edit">${I.edit}</button>`);
     acts.push(`<button class="mini danger" data-act="del" data-id="${esc(i.id)}" aria-label="Delete">${I.bin}</button>`);
   }
@@ -968,6 +1140,7 @@ function itemCard(i, idx, ctx) {
 function viewList() {
   const owner = S.listOwner, p = byName(owner), me = S.me;
   if (!p) return viewHome();
+  if (S.listMode === 'birthday') return viewBList();
   const ctx = { edit: canEdit(me, owner), see: canSeeBought(me, owner), buy: canBuy(me, owner) };
   const items = itemsFor(owner);
   ctx.drag = ctx.edit && items.length > 1;
@@ -990,6 +1163,122 @@ function viewList() {
     ${footer()}`;
 }
 
+function viewBList() {
+  const owner = S.listOwner, p = byName(owner), me = S.me, info = bdayInfo(owner);
+  const back = `<button class="back" data-act="nav" data-v="birthdays">${I.back} All birthdays</button>`;
+  const head = (t) => `<div class="listhead">${balloon(p, 48)}<h1>${esc(t)}</h1></div>`;
+  if (!canViewBList(me, owner)) {
+    return `${topbar('birthdays')}${back}${head(`${owner}'s birthday list`)}
+      <div class="locked">${giftLockSVG}
+        ${info ? `<div class="bigcount">${info.opensIn}</div><p class="party" style="font-size:22px;margin:4px 0">${info.opensIn === 1 ? 'day' : 'days'} to go</p>
+        <p>${esc(owner)}'s birthday list unwraps on <b>${fmtDay(info.opens)}</b>, two months before their birthday on ${fmtDay(info.date)}.</p>`
+        : `<p>${esc(owner)}'s birthday hasn't been added yet.</p>`}</div>${footer()}`;
+  }
+  const ctx = { edit: canEdit(me, owner), see: canSeeBought(me, owner), buy: canBuy(me, owner) };
+  const items = bItemsFor(owner);
+  ctx.drag = ctx.edit && items.length > 1;
+  const pct = info ? Math.min(100, Math.round(100 * (1 - info.opensIn / Math.max(info.opensIn, 365 - info.span)))) : 0;
+  let help = '';
+  const liveLine = (who, whose) => (!info ? `Ask ${ADMIN} to add ${whose} birthday so the list can go live.`
+    : info.open ? `${who === 'you' ? 'Your' : `${esc(owner)}'s`} list is live! Everyone can see it until the birthday on ${fmtDay(info.date)}.`
+    : `Only ${who === 'you' ? 'you' : `you and ${esc(owner)}'s helpers`} can see this for now. It goes live for everyone on <b>${fmtDay(info.opens)}</b>, ${daysText(info.opensIn)}.`);
+  if (isPet(owner)) help = `<div class="shh">${I.cake}<span>${esc(owner)} can't type, so everyone can add birthday wishes${ctx.buy ? ' and claim them' : ''}.</span></div>`;
+  else if (owner === me && isManaged(me)) help = `<div class="shh">${I.star}<span>${esc(byName(me).managedBy.join(' and '))} look after your birthday list. ${liveLine('you', 'your')}</span></div>`;
+  else if (owner === me) help = `<div class="shh">${I.lock}<span>${liveLine('you', 'your')} Add wishes any time. You'll never see what's been bought.${info && !info.open ? `<span class="livebar" style="display:block"><i style="width:${pct}%"></i></span>` : ''}</span></div>`;
+  else if (ctx.edit) help = `<div class="shh">${I.star}<span>You look after ${esc(owner)}'s birthday list. ${liveLine('helper', `${esc(owner)}'s`)}</span></div>`;
+  else if (ctx.see) help = `<div class="shh">${I.gift}<span>Birthday on <b>${fmtDay(info.date)}</b> (${daysText(info.days)}). Tap "I'll get this" to claim a present. ${esc(owner)} won't see a thing.</span></div>`;
+  else help = `<div class="shh">${I.cake}<span>Birthday on <b>${fmtDay(info.date)}</b> (${daysText(info.days)}).</span></div>`;
+  const list = items.length
+    ? `<ul class="items" id="items">${items.map((i, k) => itemCard(i, k, ctx)).join('')}</ul>`
+    : `<div class="empty">${cakeSVG}<p class="party" style="font-size:24px;font-weight:700;margin:6px 0">No birthday wishes yet</p>
+        <p>${ctx.edit ? 'Add the first one below, or move one over from the Christmas list.' : 'Check back soon.'}</p></div>`;
+  return `${topbar('birthdays')}${back}${head(owner === me ? 'My birthday list' : `${owner}'s birthday list`)}
+    ${help}${list}
+    ${ctx.edit ? `<button class="btn block gold" data-act="add">${I.plus} Add a birthday wish</button>` : ''}
+    ${footer()}`;
+}
+
+function viewBirthdays() {
+  const me = S.me, adult = byName(me).adult, partner = partnerOf(me);
+  const mi = bdayInfo(me);
+  const tile = (b) => !b ? '<span class="daytile none"><em>Date</em><b>?</b><small>not set</small></span>'
+    : b.days === 0 ? `<span class="daytile today"><em>Today</em><b>${I.cake.replace('<svg', '<svg style="width:30px;height:30px;color:#ff4fa3"')}</b><small>party!</small></span>`
+    : `<span class="daytile ${b.days <= 14 ? 'soon' : ''}"><em>${MONTHS[b.date.getMonth()].slice(0, 3)} ${b.date.getDate()}</em><b>${b.days}</b><small>${b.days === 1 ? 'day' : 'days'}</small></span>`;
+  const status = (p, b) => {
+    if (!canViewBList(me, p.name)) return `<span class="bstat">${I.lock} List opens ${b ? daysText(b.opensIn) : 'once the date is set'}</span>`;
+    const l = bItemsFor(p.name), see = canSeeBought(me, p.name), got = l.filter((i) => i.boughtBy).length;
+    if (b && !b.open) return `<span class="bstat">${I.lock} ${l.length ? plural(l.length, 'wish', 'wishes') : 'No wishes yet'} · goes live ${daysText(b.opensIn)}</span>`;
+    if (!l.length) return `<span class="bstat open">${I.gift} List open · no wishes yet</span>`;
+    return see ? `<span class="bstat ${got === l.length ? 'ok' : 'open'}">${I.gift} ${got} of ${l.length} sorted</span>` : `<span class="bstat open">${I.gift} ${plural(l.length, 'wish', 'wishes')}</span>`;
+  };
+  const row = (p) => { const b = bdayInfo(p.name);
+    return `<button class="brow" data-act="bopen" data-owner="${esc(p.name)}">${balloon(p, 40)}
+      <span class="ct"><b>${esc(p.name)}</b><small>${b ? `${fmtDay(b.date)} · ${b.days === 0 ? 'today!' : daysText(b.days)}` : 'Birthday not set yet'}</small>${status(p, b)}</span>${tile(b)}</button>`; };
+  const todays = PEOPLE.filter((p) => bdayInfo(p.name)?.days === 0);
+  const hero = todays.length ? `<div class="bhero">${cakeSVG}<h2>Happy birthday, ${todays.map((p) => esc(p.name)).join(' & ')}!</h2><p>Hip hip hooray!</p></div>` : '';
+  const myCount = bItemsFor(me).length;
+  const myCard = `<button class="mybday" data-act="bopen" data-owner="${esc(me)}">${balloon(byName(me), 50)}
+    <span class="ct"><b>My birthday list</b>
+      <small>${!mi ? `Ask ${ADMIN} to add your birthday` : mi.days === 0 ? "It's your birthday today!" : `${fmtDay(mi.date)} · ${daysText(mi.days)}`}</small>
+      <small>${isManaged(me) ? (myCount ? `${plural(myCount, 'wish', 'wishes')} · tap to see them` : 'Nothing on it yet') : `${myCount ? plural(myCount, 'wish', 'wishes') : 'No wishes yet'} · ${!mi ? 'only you can see it' : mi.open ? 'live for everyone now' : `goes live ${daysText(mi.opensIn)}`}`}</small>
+      ${mi && !mi.open ? `<span class="livebar"><i style="width:${Math.min(100, Math.round(100 * (1 - mi.opensIn / Math.max(mi.opensIn, 365 - mi.span))))}%"></i></span>` : ''}</span>${tile(mi)}</button>`;
+  const looked = PEOPLE.filter((p) => p.managedBy?.includes(me));
+  const others = PEOPLE.filter((p) => p.name !== me && !p.pet && !looked.includes(p))
+    .sort((a, b) => (bdayInfo(a.name)?.days ?? 9999) - (bdayInfo(b.name)?.days ?? 9999));
+  if (adult && S.bTab === 'shop') return viewBShop();
+  return `${topbar('birthdays')}${bSubtabs('people')}${hero}
+    ${myCard}
+    ${looked.length ? `<h2 class="sub">Birthday lists you look after</h2>${looked.map(row).join('')}` : ''}
+    <h2 class="sub">Coming up</h2>
+    ${others.map(row).join('')}
+    ${footer()}`;
+}
+
+function bSubtabs(on) {
+  if (!byName(S.me).adult) return '';
+  return `<nav class="subtabs"><button class="${on === 'people' ? 'on' : ''}" data-act="btab" data-t="people">${I.cake} Birthdays</button><button class="${on === 'shop' ? 'on' : ''}" data-act="btab" data-t="shop">${I.bag} Birthday shopping</button></nav>`;
+}
+function viewBShop() {
+  const me = S.me, partner = partnerOf(me);
+  const mine = S.items.filter((i) => i.list === 'birthday' && !isArchived(i) && isMyPurchase(i, me))
+    .sort((a, b) => (a.purchased ? 1 : 0) - (b.purchased ? 1 : 0) || (a.boughtAt || a.createdAt || 0) - (b.boughtAt || b.createdAt || 0));
+  const sum = (l) => l.reduce((t, i) => t + (costOf(i) || 0), 0);
+  const done = mine.filter((i) => i.purchased);
+  const unpriced = mine.filter((i) => costOf(i) == null).length;
+  const groups = PEOPLE.filter((p) => p.name !== me && !p.pet).map((p) => [p, mine.filter((i) => recipientOf(i) === p.name)]).filter(([, l]) => l.length)
+    .sort((a, b) => (bdayInfo(a[0].name)?.days ?? 9999) - (bdayInfo(b[0].name)?.days ?? 9999));
+  const body = groups.map(([p, l]) => {
+    const b = bdayInfo(p.name), spent = sum(l.filter((i) => i.purchased)), all = sum(l);
+    return `<div class="group"><h3>${balloon(p, 24)} For ${esc(p.name)}
+      <span class="gtot">${money(spent)} spent${all > spent ? `<small>of ${money(all)}</small>` : ''}</span></h3>
+      ${b ? `<p class="bwhen">${I.cake} Birthday ${fmtDay(b.date)} · ${b.days === 0 ? 'today!' : daysText(b.days)}</p>` : ''}
+      ${l.map((i) => shopRow(i, me, partner)).join('')}
+      <button class="addx" data-act="addextra" data-for="${esc(p.name)}" data-mode="birthday">${I.plus} Add something else for ${esc(p.name)}</button></div>`;
+  }).join('');
+  const summary = mine.length ? `<div class="summary">
+      <div><b>${money(sum(done))}</b><small>spent so far</small></div>
+      <div><b>${money(sum(mine) - sum(done))}</b><small>still to buy</small></div>
+      <div><b>${done.length}/${mine.length}</b><small>bought</small></div></div>
+    <p class="hint" style="text-align:left;margin-top:10px">Birthday presents you've claimed, soonest birthday first. Tick one once you've bought it; tap a price to change it.${unpriced ? ` ${plural(unpriced, 'present has', 'presents have')} no cost yet.` : ''} Presents drop off after the birthday.</p>`
+    : `<div class="empty">${cakeSVG}<p class="party" style="font-size:24px;font-weight:700;margin:6px 0">Nothing yet</p><p>Birthday presents you claim will appear here, or add one below.</p></div>`;
+  return `${topbar('birthdays')}${bSubtabs('shop')}<h2 class="sub">Birthday shopping</h2>
+    ${summary}${body}
+    <button class="btn block gold" data-act="addextra" data-mode="birthday">${I.plus} Add a birthday present that's not on a list</button>
+    ${footer()}`;
+}
+function shopRow(i, me, partner) {
+  const href = i.link ? safeHref(i.link) : null, c = costOf(i);
+  const joint = i.joint ? `Joint with ${esc(i.boughtBy === me ? partner : i.boughtBy)}` : '';
+  const tags = `${i.extra ? '<span class="tagx">Not on their list</span>' : ''}${i.removed ? '<span class="tagx">Taken off their list</span>' : ''}${joint}`;
+  return `<div class="srow ${i.purchased ? 'done' : ''}" data-id="${esc(i.id)}">
+      <button class="tick ${i.purchased ? 'on' : ''}" data-act="purchased" data-id="${esc(i.id)}" aria-pressed="${i.purchased ? 'true' : 'false'}" aria-label="${i.purchased ? 'Bought' : 'Mark as bought'}">${I.check}</button>
+      <div class="ib"><b>${esc(i.title)}</b>${tags ? `<small>${tags}</small>` : ''}</div>
+      <button class="cost ${c == null ? 'none' : ''}" data-act="cost" data-id="${esc(i.id)}">${c == null ? 'Add cost' : money(c)}</button>
+      ${href ? `<a class="mini" href="${esc(href)}" target="_blank" rel="noopener noreferrer" aria-label="Open link">${I.link}</a>` : ''}
+      <button class="mini danger" data-act="${i.extra ? 'delextra' : 'undo'}" data-id="${esc(i.id)}" aria-label="${i.extra ? 'Remove' : 'Not getting it after all'}">${i.extra ? I.bin : I.undo}</button>
+    </div>`;
+}
+
 function viewShopping() {
   const me = S.me, partner = partnerOf(me);
   const mine = S.items.filter((i) => i.year === S.year && isMyPurchase(i, me))
@@ -998,18 +1287,7 @@ function viewShopping() {
   const done = mine.filter((i) => i.purchased);
   const unpriced = mine.filter((i) => costOf(i) == null).length;
   const groups = PEOPLE.filter((p) => p.name !== me).map((p) => [p, mine.filter((i) => recipientOf(i) === p.name)]).filter(([, l]) => l.length);
-  const row = (i) => {
-    const href = i.link ? safeHref(i.link) : null, c = costOf(i);
-    const joint = i.joint ? `Joint with ${esc(i.boughtBy === me ? partner : i.boughtBy)}` : '';
-    const tags = `${i.extra ? '<span class="tagx">Not on their list</span>' : ''}${i.removed ? '<span class="tagx">Taken off their list</span>' : ''}${joint}`;
-    return `<div class="srow ${i.purchased ? 'done' : ''}" data-id="${esc(i.id)}">
-      <button class="tick ${i.purchased ? 'on' : ''}" data-act="purchased" data-id="${esc(i.id)}" aria-pressed="${i.purchased ? 'true' : 'false'}" aria-label="${i.purchased ? 'Bought' : 'Mark as bought'}">${I.check}</button>
-      <div class="ib"><b>${esc(i.title)}</b>${tags ? `<small>${tags}</small>` : ''}</div>
-      <button class="cost ${c == null ? 'none' : ''}" data-act="cost" data-id="${esc(i.id)}">${c == null ? 'Add cost' : money(c)}</button>
-      ${href ? `<a class="mini" href="${esc(href)}" target="_blank" rel="noopener noreferrer" aria-label="Open link">${I.link}</a>` : ''}
-      <button class="mini danger" data-act="${i.extra ? 'delextra' : 'undo'}" data-id="${esc(i.id)}" aria-label="${i.extra ? 'Remove' : 'Not getting it after all'}">${i.extra ? I.bin : I.undo}</button>
-    </div>`;
-  };
+  const row = (i) => shopRow(i, me, partner);
   const body = groups.map(([p, l]) => {
     const spent = sum(l.filter((i) => i.purchased)), all = sum(l);
     return `<div class="group"><h3>${bauble(p, 30)} For ${esc(p.name)}
@@ -1052,10 +1330,10 @@ function costBox(item) {
   });
 }
 
-function extraForm(forWho) {
+function extraForm(forWho, bday = false) {
   const me = S.me, partner = partnerOf(me);
-  const options = PEOPLE.filter((p) => p.name !== me);
-  openModal(`<h2>Add a present</h2>
+  const options = PEOPLE.filter((p) => p.name !== me && !(bday && p.pet));
+  openModal(`<h2>${bday ? 'Add a birthday present' : 'Add a present'}</h2>
     <p style="color:var(--muted);font-weight:700">For something that isn't on anyone's list. Only you${partner ? ` (and ${esc(partner)}, if it's joint)` : ''} will see it.</p>
     <form id="f" novalidate>
       <div class="field"><span>Who is it for?</span><div class="pickgrid">
@@ -1084,9 +1362,10 @@ function extraForm(forWho) {
       f.querySelector('[type=submit]').disabled = true;
       try {
         const now = Date.now();
-        await store.addItem({ extra: true, owner: '~extra', for: who, title, paid: cost, price: '', link: '', notes: '', tag: 'like', year: S.year, order: 0,
+        await store.addItem({ extra: true, owner: '~extra', for: who, title, paid: cost, price: '', link: '', notes: '', tag: 'like', order: 0,
+          ...(bday ? { year: 'birthday', list: 'birthday', cycle: bdayInfo(who)?.iso || null } : { year: S.year }),
           boughtBy: me, joint, boughtAt: now, purchased: !!F.done.checked, createdAt: now, createdBy: me, removed: false });
-        closeModal(); sparkle(); toast(`Added to your shopping for ${who}`);
+        closeModal(); sparkle(); toast(`Added to your ${bday ? 'birthday ' : ''}shopping for ${who}`);
       } catch (e2) { f.querySelector('[type=submit]').disabled = false; err(friendlyError(e2)); }
     };
   });
@@ -1097,6 +1376,12 @@ function viewAdmin() {
       ${S.people[p.name]?.pinHash ? `<button class="btn small ghost" data-act="resetpin" data-name="${esc(p.name)}">Reset PIN</button>` : '<span class="pill">No PIN yet</span>'}</div>`).join('');
   return `${topbar('admin')}<h2 class="sub">North Pole control</h2>
     <div class="group"><h3>PINs</h3><p class="hint" style="text-align:left;color:var(--muted)">Resetting a PIN keeps their list. They choose a new PIN next time they visit.</p>${rows}</div>
+    <div class="group"><h3>Birthdays</h3><p class="hint" style="text-align:left;color:var(--muted)">Change a date and it saves straight away. Lists go live two months before.</p>
+      ${PEOPLE.filter((p) => !p.pet).map((p) => { const md = bdayOf(p.name), [m, d] = md ? md.split('-').map(Number) : [0, 0];
+        return `<div class="arow">${bauble(p, 26)}<b>${esc(p.name)}</b>
+          <select class="bdsel" name="bd-${esc(p.name)}-d" data-name="${esc(p.name)}" aria-label="${esc(p.name)} birthday day"><option value="">Day</option>${Array.from({ length: 31 }, (_, k) => `<option value="${k + 1}" ${k + 1 === d ? 'selected' : ''}>${k + 1}</option>`).join('')}</select>
+          <select class="bdsel" name="bd-${esc(p.name)}-m" data-name="${esc(p.name)}" aria-label="${esc(p.name)} birthday month"><option value="">Month</option>${MONTHS.map((mn, k) => `<option value="${k + 1}" ${k + 1 === m ? 'selected' : ''}>${mn.slice(0, 3)}</option>`).join('')}</select></div>`; }).join('')}
+    </div>
     <div class="group"><h3>Christmas ${S.year}</h3>
       <p>When Christmas is over, start a fresh year. Everyone gets an empty list. This year's lists are kept in the database but no longer shown.</p>
       <button class="btn block" data-act="newyear">Start Christmas ${S.year + 1}</button></div>
@@ -1127,11 +1412,12 @@ function confirmBox(title, text, yes, onYes, danger = true) {
 
 function itemForm(owner, item) {
   const v = item || { title: '', link: '', price: '', notes: '', tag: 'like' };
+  const bday = item ? item.list === 'birthday' : S.listMode === 'birthday';
   const who = owner === S.me ? 'your' : `${owner}'s`;
-  openModal(`<h2>${item ? 'Edit wish' : 'New wish'}</h2>
-    <p style="color:var(--muted);font-weight:700">For ${esc(who)} list</p>
+  openModal(`<h2>${item ? 'Edit wish' : bday ? 'New birthday wish' : 'New wish'}</h2>
+    <p style="color:var(--muted);font-weight:700">For ${esc(who)} ${bday ? 'birthday' : 'Christmas'} list</p>
     <form id="f" novalidate>
-      <label class="field"><span>What is it?</span><input name="wtitle" maxlength="80" required value="${esc(v.title)}" placeholder="e.g. LEGO Christmas train" autocomplete="off"></label>
+      <label class="field"><span>What is it?</span><input name="wtitle" maxlength="80" required value="${esc(v.title)}" placeholder="${bday ? 'e.g. Roller skates' : 'e.g. LEGO Christmas train'}" autocomplete="off"></label>
       <label class="field"><span>Link <em>(optional)</em></span><input name="link" inputmode="url" maxlength="600" value="${esc(v.link)}" placeholder="Paste a shop link" autocomplete="off"></label>
       <label class="field"><span>Price <em>(optional)</em></span><input name="price" maxlength="20" value="${esc(v.price)}" placeholder="e.g. £25" autocomplete="off"></label>
       <label class="field"><span>Notes <em>(size, colour and so on)</em></span><textarea name="notes" maxlength="240" placeholder="e.g. Size 9, the blue one">${esc(v.notes)}</textarea></label>
@@ -1154,10 +1440,11 @@ function itemForm(owner, item) {
       try {
         if (item) { await store.updateItem(item.id, data); toast('Wish updated'); }
         else {
-          const list = itemsFor(owner);
+          const list = bday ? bItemsFor(owner) : itemsFor(owner);
           const order = list.length ? Math.max(...list.map((i) => i.order ?? 0)) + 1000 : 1000;
-          await store.addItem({ ...data, owner, year: S.year, order, createdAt: Date.now(), createdBy: S.me, boughtBy: null, joint: false, removed: false });
-          sparkle(); toast('Added to the list!');
+          await store.addItem({ ...data, owner, year: bday ? 'birthday' : S.year, list: bday ? 'birthday' : null, order, createdAt: Date.now(), createdBy: S.me, boughtBy: null, joint: false, removed: false });
+          if (bday) { partyHorn(); sparkle(); } else sparkle();
+          toast(bday ? 'Added to the birthday list!' : 'Added to the list!');
         }
         closeModal();
       } catch (err) { f.querySelector('[type=submit]').disabled = false; m.querySelector('#ferr').textContent = friendlyError(err); }
@@ -1167,7 +1454,8 @@ function itemForm(owner, item) {
 
 function buyBox(item) {
   const me = S.me, partner = partnerOf(me) === item.owner ? null : partnerOf(me);
-  openModal(`<h2>Get this for ${esc(item.owner)}?</h2>
+  const bday = item.list === 'birthday';
+  openModal(`<h2>Get this for ${esc(item.owner)}${bday ? "'s birthday" : ''}?</h2>
     <div class="big-item">${esc(item.title)}${item.price ? ` <span class="price">· ${esc(item.price)}</span>` : ''}</div>
     <p style="margin-top:12px">Everyone else will see this is sorted, so nobody doubles up. ${esc(item.owner)} won't see a thing.</p>
     ${partner ? `<label class="toggle"><input type="checkbox" id="joint"> Joint present from me and ${esc(partner)}</label>` : ''}
@@ -1177,9 +1465,10 @@ function buyBox(item) {
       const joint = !!m.querySelector('#joint')?.checked;
       e.currentTarget.disabled = true;
       try {
-        await store.claim(item.id, { boughtBy: me, joint, boughtAt: Date.now() });
-        closeModal(); burst(r.left + r.width / 2, r.top); jingle();
-        toast(joint ? `Sorted! Joint present with ${partner}.` : 'Sorted! Ho ho ho!');
+        await store.claim(item.id, { boughtBy: me, joint, boughtAt: Date.now(), ...(bday ? { cycle: bdayInfo(item.owner)?.iso || null } : {}) });
+        closeModal(); burst(r.left + r.width / 2, r.top);
+        if (bday) happyBirthday(); else jingle();
+        toast(joint ? `Sorted! Joint present with ${partner}.` : bday ? 'Sorted! Party time!' : 'Sorted! Ho ho ho!');
       } catch (err) {
         closeModal(); sadTrombone();
         toast(err.message === 'taken' ? 'Too slow! Someone has just bought that.' : err.message === 'gone' ? 'That wish has just been removed.' : friendlyError(err), true);
@@ -1187,6 +1476,31 @@ function buyBox(item) {
     };
   });
 }
+
+async function moveItem(item) {
+  const owner = item.owner, toB = item.list !== 'birthday';
+  const target = toB ? bItemsFor(owner) : itemsFor(owner);
+  const order = target.length ? Math.max(...target.map((i) => i.order ?? 0)) + 1000 : 1000;
+  const patch = toB ? { list: 'birthday', year: 'birthday', order, cycle: item.boughtBy ? (bdayInfo(owner)?.iso || null) : null }
+    : { list: null, year: S.year, order, cycle: null };
+  if (item.boughtBy) patch.moveId = Date.now();
+  try {
+    await store.updateItem(item.id, patch);
+    if (toB) partyHorn(); else sparkle();
+    toast(`Moved to ${owner === S.me ? 'your' : `${owner}'s`} ${toB ? 'birthday' : 'Christmas'} list`);
+  } catch (err) { toast(friendlyError(err), true); }
+}
+document.addEventListener('change', async (e) => {
+  const sel = e.target.closest?.('.bdsel');
+  if (!sel || S.me !== ADMIN) return;
+  const name = sel.dataset.name;
+  const d = document.querySelector(`select[name="bd-${CSS.escape(name)}-d"]`).value, m = document.querySelector(`select[name="bd-${CSS.escape(name)}-m"]`).value;
+  if (!d || !m) return;
+  const dim = new Date(2024, +m, 0).getDate();
+  if (+d > dim) { toast(`${MONTHS[m - 1]} only has ${dim} days`, true); return; }
+  const birthdays = { ...BIRTHDAYS, ...(S.meta?.birthdays || {}), [name]: `${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}` };
+  try { await store.setMeta({ birthdays }); toast(`${name}'s birthday saved: ${d} ${MONTHS[m - 1]}`); } catch (err) { toast(friendlyError(err), true); }
+});
 
 /* ---------- drag to reorder ---------- */
 function startDrag(handle, e) {
@@ -1276,7 +1590,7 @@ async function pinKey(k) {
 }
 function finishLogin(who, h) {
   setSession({ name: who, hash: h });
-  S.pin = null; S.me = who;
+  S.pin = null; S.me = who; S.bTab = 'people';
   chime(); go('home');
   const r = innerWidth / 2; burst(r, 120, 60);
   toast(`Merry Christmas, ${who}!`);
@@ -1300,11 +1614,21 @@ document.addEventListener('click', async (e) => {
     case 'pinkey': pinKey(el.dataset.k); break;
     case 'pindel': if (S.pin && !S.pin.busy) { S.pin.entry = S.pin.entry.slice(0, -1); render(); } break;
     case 'pinback': S.pin = null; go('login'); break;
-    case 'logout': setSession(null); S.me = null; pop(); go('login'); break;
+    case 'logout': setSession(null); S.me = null; S.bTab = 'people'; pop(); go('login'); break;
     case 'music': S.music = !S.music; try { localStorage.setItem(MUSIC_KEY, S.music ? 'on' : 'off'); } catch {} if (S.music) startMusic(); else stopMusic(); render(); break;
     case 'sound': S.sound = !S.sound; try { localStorage.setItem(SOUND_KEY, S.sound ? 'on' : 'off'); } catch {} if (S.sound) chime(); render(); break;
-    case 'nav': pop(); go(el.dataset.v); break;
-    case 'open': pop(); go('list', { listOwner: el.dataset.owner }); break;
+    case 'nav':
+      if (el.dataset.v === 'birthdays') {
+        partyHorn(); go('birthdays', { bTab: S.view === 'birthdays' ? S.bTab : (S.bTab || 'people') });
+        const todays = PEOPLE.filter((p) => bdayInfo(p.name)?.days === 0).map((p) => p.name).join(',');
+        if (todays && S.celebrated !== todays + isoDay(today0())) { S.celebrated = todays + isoDay(today0()); burst(innerWidth / 2, 160, 120); happyBirthday(); }
+      } else { pop(); go(el.dataset.v); }
+      break;
+    case 'open': pop(); go('list', { listOwner: el.dataset.owner, listMode: 'xmas' }); break;
+    case 'btab': pop(); S.bTab = el.dataset.t; render(); scrollTo(0, 0); break;
+    case 'bopen': partyHorn(); go('list', { listOwner: el.dataset.owner, listMode: 'birthday' }); break;
+    case 'move': if (item && canEdit(S.me, item.owner) && !isPet(item.owner)) moveItem(item); break;
+    case 'ackmove': if (item && isMyPurchase(item, S.me)) { try { await store.updateItem(item.id, { ['mvack_' + S.me]: item.moveId }); } catch (err) { toast(friendlyError(err), true); } } break;
     case 'add': itemForm(S.listOwner); break;
     case 'edit': if (item && canEdit(S.me, item.owner)) itemForm(item.owner, item); break;
     case 'del': {
@@ -1337,8 +1661,8 @@ document.addEventListener('click', async (e) => {
           confirmBox('Not getting it after all?', `${esc(item.owner)} already took <b>${esc(item.title)}</b> off the list, so it will disappear completely.`, 'Remove it', async () => {
             await store.deleteItem(item.id); toast('Removed');
           });
-        } else confirmBox('Not getting it after all?', `<b>${esc(item.title)}</b> will go back on ${esc(item.owner)}'s list for someone else to buy.`, 'Put it back', async () => {
-          await store.updateItem(item.id, { boughtBy: null, joint: false, boughtAt: null, purchased: false, paid: null });
+        } else confirmBox('Not getting it after all?', `<b>${esc(item.title)}</b> will go back on ${esc(item.owner)}'s ${item.list === 'birthday' ? 'birthday ' : ''}list for someone else to buy.`, 'Put it back', async () => {
+          await store.updateItem(item.id, { boughtBy: null, joint: false, boughtAt: null, purchased: false, paid: null, cycle: null });
           toast('Back on the list');
         }, false);
       }
@@ -1354,7 +1678,7 @@ document.addEventListener('click', async (e) => {
       }
       break;
     case 'cost': if (item && isMyPurchase(item, S.me)) costBox(item); break;
-    case 'addextra': if (byName(S.me)?.adult) extraForm(el.dataset.for || ''); break;
+    case 'addextra': if (byName(S.me)?.adult) extraForm(el.dataset.for || '', el.dataset.mode === 'birthday'); break;
     case 'delextra':
       if (item && item.extra && isMyPurchase(item, S.me)) {
         confirmBox('Remove this present?', `<b>${esc(item.title)}</b> will come off your shopping.`, 'Remove', async () => {
