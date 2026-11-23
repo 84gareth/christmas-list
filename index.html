@@ -81,7 +81,6 @@ h1,h2,.festive{font-family:"Mountains of Christmas",Georgia,serif;font-weight:70
 .tab.on{background:var(--red);color:#fff;box-shadow:0 3px 0 var(--red-d)}
 
 /* ---------- birthday mode ---------- */
-body{transition:background .5s}
 body.bday{background:radial-gradient(ellipse at 50% -10%,#ff8fd0 0%,#b44dff 34%,#5a23a8 68%,#2a1157 100%) fixed}
 body.bday .moon,body.bday .sleigh,body.bday #ground{display:none}
 body.bday .star{background:#ffe066}
@@ -141,6 +140,8 @@ body.bday .balloons{display:block}
 .subtabs button{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 6px;border-radius:14px;font-weight:900;font-size:14px;color:#f3dcff;background:rgba(40,0,80,.35);border:2px solid transparent}
 .subtabs button svg{width:17px;height:17px}
 .subtabs button.on{background:#fff;color:#c42a7c;border-color:#ffb3dc}
+.subtabs.xmas button{background:rgba(0,0,0,.25);color:#cfe0ff}
+.subtabs.xmas button.on{background:var(--paper);color:var(--red);border-color:var(--gold)}
 .bwhen{display:flex;align-items:center;gap:6px;margin:-2px 0 4px;color:#9b4d8a;font-weight:800;font-size:13px}
 .bwhen svg{width:15px;height:15px}
 
@@ -334,7 +335,7 @@ body.bday .balloons{display:block}
 /* ============================================================
    The Family Christmas List
    ============================================================ */
-const VERSION = '1.5.0';
+const VERSION = '1.5.1';
 
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyBRPZgESoFpIrDzE50Jiav6hdtLWFOoWWM",
@@ -1051,10 +1052,9 @@ function audioButtons() {
 }
 function topbar(active) {
   const me = byName(S.me);
-  const tabs = `<nav class="tabs ${S.me === ADMIN ? 'many' : ''}">
-      <button class="tab ${active === 'home' ? 'on' : ''}" data-act="nav" data-v="home">${I.tree} Christmas</button>
+  const tabs = `<nav class="tabs">
+      <button class="tab ${active === 'home' || active === 'shopping' ? 'on' : ''}" data-act="nav" data-v="${active === 'shopping' ? 'shopping' : 'home'}">${I.tree} Christmas</button>
       <button class="tab ${active === 'birthdays' ? 'on' : ''}" data-act="nav" data-v="birthdays">${I.cake} Birthdays</button>
-      ${me.adult ? `<button class="tab ${active === 'shopping' ? 'on' : ''}" data-act="nav" data-v="shopping">${I.bag} Shopping</button>` : ''}
       ${S.me === ADMIN ? `<button class="tab ${active === 'admin' ? 'on' : ''}" data-act="nav" data-v="admin">${I.key} Admin</button>` : ''}
     </nav>`;
   const mine = bdayInfo(S.me);
@@ -1099,7 +1099,7 @@ function viewHome() {
   const notices = byName(me).adult ? noticesFor(me) : '';
   const upcoming = PEOPLE.filter((p) => p.name !== me && !p.pet).map((p) => [p, bdayInfo(p.name)]).filter(([, b]) => b).sort((a, b) => a[1].days - b[1].days)[0];
   const strip = upcoming ? `<button class="nextb" data-act="nav" data-v="birthdays">${I.cake}<span>${upcoming[1].days === 0 ? `It's ${esc(upcoming[0].name)}'s birthday today!` : `Next birthday: ${esc(upcoming[0].name)}, ${fmtDay(upcoming[1].date)} (${daysText(upcoming[1].days)})`}</span>${I.chev}</button>` : '';
-  return `${topbar('home')}${notices}${strip}
+  return `${topbar('home')}${xSubtabs('lists')}${notices}${strip}
     <button class="card mine" data-act="open" data-owner="${esc(me)}">${bauble(byName(me), 56)}
       <span class="ct"><b>My wishlist</b><small>${mine.length ? plural(mine.length, 'wish', 'wishes') + (isManaged(me) ? ' · tap to see them' : ' · tap to add or sort') : (isManaged(me) ? 'Nothing on it yet' : 'Tap here to write your first wish')}</small></span>${I.chev.replace('<svg', '<svg class="chev"')}</button>
     ${looked.length ? `<h2 class="sub">Lists you look after</h2><div class="grid">${looked.map(listCard).join('')}</div>` : ''}
@@ -1234,9 +1234,13 @@ function viewBirthdays() {
     ${footer()}`;
 }
 
+function xSubtabs(on) {
+  if (!byName(S.me).adult) return '';
+  return `<nav class="subtabs xmas"><button class="${on === 'lists' ? 'on' : ''}" data-act="nav" data-v="home">${I.list} Lists</button><button class="${on === 'shop' ? 'on' : ''}" data-act="nav" data-v="shopping">${I.bag} Shopping</button></nav>`;
+}
 function bSubtabs(on) {
   if (!byName(S.me).adult) return '';
-  return `<nav class="subtabs"><button class="${on === 'people' ? 'on' : ''}" data-act="btab" data-t="people">${I.cake} Birthdays</button><button class="${on === 'shop' ? 'on' : ''}" data-act="btab" data-t="shop">${I.bag} Birthday shopping</button></nav>`;
+  return `<nav class="subtabs"><button class="${on === 'people' ? 'on' : ''}" data-act="btab" data-t="people">${I.cake} Birthdays</button><button class="${on === 'shop' ? 'on' : ''}" data-act="btab" data-t="shop">${I.bag} Shopping</button></nav>`;
 }
 function viewBShop() {
   const me = S.me, partner = partnerOf(me);
@@ -1301,7 +1305,7 @@ function viewShopping() {
       <div><b>${done.length}/${mine.length}</b><small>bought</small></div></div>
     <p class="hint" style="text-align:left;margin-top:10px">Tick a present once you've actually bought it. Tap a price to change it to what you paid.${unpriced ? ` ${plural(unpriced, 'present has', 'presents have')} no cost yet.` : ''}${partner ? ` Joint presents with ${esc(partner)} count in full in both your totals.` : ''}</p>`
     : `<div class="empty">${snowmanSVG}<p class="festive" style="font-size:26px;margin:6px 0">Nothing yet</p><p>Presents you claim on other people's lists will appear here, or add one below.</p></div>`;
-  return `${topbar('shopping')}<h2 class="sub">My shopping</h2>
+  return `${topbar('shopping')}${xSubtabs('shop')}<h2 class="sub">Christmas shopping</h2>
     ${summary}${body}
     <button class="btn block gold" data-act="addextra">${I.plus} Add a present that's not on a list</button>
     ${footer()}`;
